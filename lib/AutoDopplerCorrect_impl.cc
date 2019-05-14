@@ -106,7 +106,7 @@ namespace gr {
         message_port_register_out(pmt::mp("signaldetect"));
         message_port_register_out(pmt::mp("msgout"));
         message_port_register_out(pmt::mp("freq_info"));
-
+        message_port_register_out(pmt::mp("freq_shift"));
     }
 
     bool AutoDopplerCorrect_impl::stop() {
@@ -352,6 +352,8 @@ namespace gr {
 					  meta = pmt::dict_add(meta, pmt::mp("signalpower"), pmt::mp(signalVector[closestIndex].maxPower));
 					  pmt::pmt_t pdu = pmt::cons( meta, pmt::PMT_NIL );
 
+					  message_port_pub(pmt::mp("freq_shift"),pmt::from_double(d_currentFreqShiftDelta));
+
 					  if (!testMode)
 						  message_port_pub(pmt::mp("freq_info"),pdu);
 				  }
@@ -368,6 +370,8 @@ namespace gr {
 						*pMetadata = pmt::dict_add(*pMetadata, pmt::mp("signalcenterfreq"), pmt::mp(signalVector[closestIndex].centerFreqHz));
 					  if (!pmt::dict_has_key(*pMetadata,pmt::mp("trackingcenterfreq")))
 						*pMetadata = pmt::dict_add(*pMetadata, pmt::mp("trackingcenterfreq"), pmt::mp(signalVector[closestIndex].centerFreqHz));
+
+					  message_port_pub(pmt::mp("freq_shift"),pmt::from_double(d_currentFreqShiftDelta));
 
 					  pmt::pmt_t pdu = pmt::cons( *pMetadata, pmt::PMT_NIL );
 					  if (!testMode)
@@ -391,6 +395,8 @@ namespace gr {
 
 					d_currentFreqShiftDelta = 0.0;
 					d_nco.set_freq(0.0);
+
+					message_port_pub(pmt::mp("freq_shift"),pmt::from_double(d_currentFreqShiftDelta));
 				}
 				else {
 					inHoldDown = true;
@@ -433,7 +439,10 @@ namespace gr {
   	      		          meta = pmt::dict_add(meta, pmt::mp("trackingcenterfreq"), pmt::mp(signalVector[closestIndex].centerFreqHz));
   						  meta = pmt::dict_add(meta, pmt::mp("widthHz"), pmt::mp(signalVector[closestIndex].widthHz));
   						  meta = pmt::dict_add(meta, pmt::mp("signalpower"), pmt::mp(signalVector[closestIndex].maxPower));
-  	      		          pmt::pmt_t pdu = pmt::cons( meta, pmt::PMT_NIL );
+
+  						  message_port_pub(pmt::mp("freq_shift"),pmt::from_double(d_currentFreqShiftDelta));
+
+  						  pmt::pmt_t pdu = pmt::cons( meta, pmt::PMT_NIL );
   						  if (!testMode)
   							  message_port_pub(pmt::mp("freq_info"),pdu);
   	      			  }
@@ -450,6 +459,8 @@ namespace gr {
   	      					*pMetadata = pmt::dict_add(*pMetadata, pmt::mp("signalcenterfreq"), pmt::mp(signalVector[closestIndex].centerFreqHz));
   	      				  if (!pmt::dict_has_key(*pMetadata,pmt::mp("trackingcenterfreq")))
   	      					*pMetadata = pmt::dict_add(*pMetadata, pmt::mp("trackingcenterfreq"), pmt::mp(signalVector[closestIndex].centerFreqHz));
+
+  						  message_port_pub(pmt::mp("freq_shift"),pmt::from_double(d_currentFreqShiftDelta));
 
   	      		          pmt::pmt_t pdu = pmt::cons( *pMetadata, pmt::PMT_NIL );
   						  if (!testMode)

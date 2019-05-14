@@ -126,6 +126,11 @@
     <type>message</type>
     <optional>1</optional>
   </source>
+  <source>
+    <name>freq_shift</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>
 	<doc>
 This block scans the input signal for a signal near the center frequency and attempts to keep the output centered.
 
