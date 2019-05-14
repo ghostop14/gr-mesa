@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<block>
+  <name>Signal Detector</name>
+  <key>mesa_MesaEnergyDetector</key>
+  <category>[mesa]</category>
+  <import>import mesa</import>
+  <make>mesa.MesaEnergyDetector($fft_size, $squelchThreshold, $minWidthHz, $maxWidthHz, $radioCenterFreq, $sampleRate, $holdUpSec, $framesToAvg, $genSignalPDUs, $enableDebug)</make>
+	<callback>setSquelch($squelchThreshold)</callback>
+	<callback>setMinWidthHz($minWidthHz)</callback>
+	<callback>setMaxWidthHz($maxWidthHz)</callback>
+	<callback>setCenterFrequency($radioCenterFreq)</callback>
+	<param>
+		<name>FFT Size</name>
+		<key>fft_size</key>
+		<value>1024</value>
+		<type>int</type>
+	</param>
+
+	<param>
+		<name>Squelch Threshold</name>
+		<key>squelchThreshold</key>
+		<value>-80.0</value>
+		<type>float</type>
+	</param>
+
+	<param>
+		<name>Min Signal Width (Hz)</name>
+		<key>minWidthHz</key>
+		<value>6000.0</value>
+		<type>float</type>
+	</param>
+
+	<param>
+		<name>Max Signal Width (Hz)</name>
+		<key>maxWidthHz</key>
+		<value>60000.0</value>
+		<type>float</type>
+	</param>
+	
+	<param>
+		<name>Radio Frequency</name>
+		<key>radioCenterFreq</key>
+		<value>freq</value>
+		<type>float</type>
+	</param>
+
+	<param>
+		<name>Sample Rate</name>
+		<key>sampleRate</key>
+		<value>samp_rate</value>
+		<type>float</type>
+	</param>
+
+	<param>
+		<name>Hold Time (s)</name>
+		<key>holdUpSec</key>
+		<value>10.0</value>
+		<type>float</type>
+	</param>
+	
+	<param>
+		<name>Frames to Avg</name>
+		<key>framesToAvg</key>
+		<value>6</value>
+		<type>int</type>
+	</param>
+	
+	<param>
+		<name>Gen Signal PDUs</name>
+		<key>genSignalPDUs</key>
+		<type>enum</type>
+		<option>
+			<name>Off</name>
+			<key>False</key>
+		</option>
+		<option>
+			<name>On</name>
+			<key>True</key>
+		</option>
+	</param>
+	
+	<param>
+		<name>Debug</name>
+		<key>enableDebug</key>
+		<type>enum</type>
+		<option>
+			<name>Off</name>
+			<key>False</key>
+		</option>
+		<option>
+			<name>On</name>
+			<key>True</key>
+		</option>
+	</param>
+	
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+  </sink>
+
+  <sink>
+    <name>msgin</name>
+    <type>message</type>
+    <optional>1</optional>
+   </sink>
+   
+  <source>
+    <name>signal</name>
+    <type>complex</type>
+  </source>
+
+  <source>
+    <name>signaldetect</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>
+  
+  <source>
+    <name>signals</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>
+	<doc>
+This block scans the input signal looking for sub signals of the specified min/max width.  The block takes a max-hold average to inspect the spectrum, then determines any signals present.  Note that the FFT frames to average is configurable.  Too small and the detection is jittery, too high and too many samples will be held/processed so pick a number that works well (or stick with the default).
+
+When a signal is detected, a PDU will be generated on the signaldetect connector with a 'state' metadata tag set to 1.  PDU's are only sent on state changes, so any downstream blocks should track their own state.  When no signals are present and the hold timer has expired, a PDU will be generated with 'state' set to 0.
+
+If more data processing is desired, 'Gen Signal PDUs' can be turned on.  In that case, for each detected signal, a PDU is generated along with some metadata (radio freq, sample rate, signal center freq, signal width, and signal max power) along with the full data block.  This can be used downstream to tune filters and/or shift the signal.  
+
+NOTES: 
+
+Using the standard 'out' source only produces a single pipeline, however: THE OUTPUT 'SIGNALS' MESSAGE SOURCE CONNECTOR SENDS A MESSAGE FOR EACH DETECTED SIGNAL IN A GIVEN INPUT BUFFER.  This means that the out data will be sent along with the detected signal info for EACH detected signal in a given input buffer.  If you write this to say a file sink or assume it's a single pipeline downstream, it's NOT!
+
+For SQUELCHTHRESHOLD, pick a number that's above any noise floor.  The detector looks for the upward transition from this squelch threshold, therefore everything that's not a signal should be below this threshold, such that everything above it can be assumed to be a signal.
+	</doc>
+</block>

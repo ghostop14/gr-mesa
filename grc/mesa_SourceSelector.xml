@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<block>
+  <name>Source Selector</name>
+  <key>mesa_SourceSelector</key>
+  <category>[mesa]</category>
+  <import>import mesa</import>
+  <make>mesa.SourceSelector($holdTime, 4, 1,$inputBlockSize)</make>
+  <!-- Make one 'param' node for every Parameter you want settable from the GUI.
+       Sub-nodes:
+       * name
+       * key (makes the value accessible as $keyname, e.g. in the make node)
+       * type -->
+	<param>
+		<name>Input Hold Time (s)</name>
+		<key>holdTime</key>
+		<value>10.0</value>
+		<type>float</type>
+	</param>
+
+	<!--
+	<param>
+		<name>Num Inputs</name>
+		<key>numInputs</key>
+		<value>2</value>
+		<type>int</type>
+	</param>
+	
+	<param>
+		<name>Default Input</name>
+		<key>defaultInput</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	-->
+	
+	<param>
+		<name>Input Block Size</name>
+		<key>inputBlockSize</key>
+		<value>fftsize*framesToAvg</value>
+		<type>int</type>
+	</param>
+	
+  <!-- Make one 'sink' node per input. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <sink>
+    <name>in1</name>
+    <type>message</type>
+  </sink>
+
+  <sink>
+    <name>in2</name>
+    <type>message</type>
+    <optional>1</optional>
+  </sink>
+
+  <sink>
+    <name>in3</name>
+    <type>message</type>
+    <optional>1</optional>
+  </sink>
+
+  <sink>
+    <name>in4</name>
+    <type>message</type>
+    <optional>1</optional>
+  </sink>
+
+  <!-- Make one 'source' node per output. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <source>
+    <name>out</name>
+    <type>complex</type>
+  </source>
+  <source>
+    <name>inputchange</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>
+	<doc>
+This block monitors the message inputs for a meta tag "decisionvalue" associated with the input data.  Whichever input has the maximum power is the one whose data is sent to the output.  A hold-down timer is available to limit "bouncing".
+	</doc>
+</block>

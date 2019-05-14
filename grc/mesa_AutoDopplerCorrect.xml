@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<block>
+  <name>Auto Doppler Correct</name>
+  <key>mesa_AutoDopplerCorrect</key>
+  <category>[mesa]</category>
+  <import>import mesa</import>
+  <make>mesa.AutoDopplerCorrect($freq, $sampleRate, $maxDrift, $minWidth, $expectedWidth, $shiftHolddownMS, $fft_size, $squelchThreshold, $framesToAvg, $holdUpSec, $processMessages)</make>
+	<callback>setSquelch($squelchThreshold)</callback>
+	<callback>setMinWidthHz($minWidthHz)</callback>
+	<callback>setCenterFrequency($radioCenterFreq)</callback>
+	<callback>setExpectedWidth($expectedWidth)</callback>
+	<callback>setMaxDrift($maxDrift)</callback>
+	<param>
+		<name>Radio Frequency</name>
+		<key>freq</key>
+		<value>freq</value>
+		<type>float</type>
+	</param>
+
+	<param>
+		<name>Sample Rate</name>
+		<key>sampleRate</key>
+		<value>samp_rate</value>
+		<type>float</type>
+	</param>
+
+	<param>
+		<name>Max Drift (Hz)</name>
+		<key>maxDrift</key>
+		<value>3000.0</value>
+		<type>float</type>
+	</param>
+	
+	<param>
+		<name>Min Signal Width (Hz)</name>
+		<key>minWidth</key>
+		<value>2000.0</value>
+		<type>float</type>
+	</param>
+	
+	<param>
+		<name>Expected Signal Width (Hz)</name>
+		<key>expectedWidth</key>
+		<value>6000.0</value>
+		<type>float</type>
+	</param>
+	
+	<param>
+		<name>Shift Hold Time (ms)</name>
+		<key>shiftHolddownMS</key>
+		<value>2000</value>
+		<type>int</type>
+	</param>
+
+	<param>
+		<name>Detect Hold Time (s)</name>
+		<key>holdUpSec</key>
+		<value>10.0</value>
+		<type>float</type>
+	</param>
+	
+	<param>
+		<name>FFT Size</name>
+		<key>fft_size</key>
+		<value>1024</value>
+		<type>int</type>
+	</param>
+
+	<param>
+		<name>Squelch Threshold</name>
+		<key>squelchThreshold</key>
+		<value>-80.0</value>
+		<type>float</type>
+	</param>
+	
+	<param>
+		<name>Frames to Avg</name>
+		<key>framesToAvg</key>
+		<value>6</value>
+		<type>int</type>
+	</param>
+	
+	<param>
+		<name>Message Processing</name>
+		<key>processMessages</key>
+		<type>enum</type>
+		<option>
+			<name>Off</name>
+			<key>False</key>
+		</option>
+		<option>
+			<name>On</name>
+			<key>True</key>
+		</option>
+	</param>
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+  </sink>
+
+  <sink>
+    <name>msgin</name>
+    <type>message</type>
+    <optional>1</optional>
+   </sink>
+   
+  <source>
+    <name>out</name>
+    <type>complex</type>
+  </source>
+
+  <source>
+    <name>msgout</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>
+  
+  <source>
+    <name>signaldetect</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>
+
+  <source>
+    <name>freq_info</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>
+	<doc>
+This block scans the input signal for a signal near the center frequency and attempts to keep the output centered.
+
+If you would like to switch to processing the output as a PDU, enable PDU processing.  This will enable the msgout port.  
+
+NOTES: 
+
+For SQUELCHTHRESHOLD, pick a number that's above any noise floor.  The detector looks for the upward transition from this squelch threshold, therefore everything that's not a signal should be below this threshold, such that everything above it can be assumed to be a signal.
+	</doc>
+</block>
