@@ -145,9 +145,9 @@ namespace gr {
 
           // Send maxpower message
     	  pmt::pmt_t meta = pmt::make_dict();
-    	  meta = pmt::dict_add(meta, pmt::mp("decisionvalue"), pmt::mp(maxAvg));
-    	  meta = pmt::dict_add(meta, pmt::mp("maxpower"), pmt::mp(maxAvg));
-    	  meta = pmt::dict_add(meta, pmt::mp("squelch"), pmt::mp(d_squelchThreshold));
+    	  meta = pmt::dict_add(meta, pmt::mp("decisionvalue"), pmt::from_float(maxAvg));
+    	  meta = pmt::dict_add(meta, pmt::mp("maxpower"), pmt::from_float(maxAvg));
+    	  meta = pmt::dict_add(meta, pmt::mp("squelch"), pmt::from_float(d_squelchThreshold));
 
     	  pmt::pmt_t pdu = pmt::cons( meta, pmt::PMT_NIL );
 
