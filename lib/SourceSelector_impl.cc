@@ -54,16 +54,6 @@ namespace gr {
 
     	d_startInitialized = false;
 
-    	/*
-    	if (inputBlockSize > 0) {
-    		maxQueueSize = inputBlockSize * 16;
-    		limitQueue = true;
-    	}
-    	else {
-    		maxQueueSize = 0;
-    		limitQueue = false;
-    	}
-		*/
     	limitQueue = false;
 
     	// Initial anti-jitter buffer
@@ -118,16 +108,14 @@ namespace gr {
 
     void SourceSelector_impl::queueData(pmt::pmt_t msg) {
 		pmt::pmt_t data = pmt::cdr(msg);
-		size_t noutput_items = pmt::length(data);
+		size_t vecSize = pmt::length(data);
 		const gr_complex *cc_samples;
-		cc_samples = pmt::c32vector_elements(data,noutput_items);
+		cc_samples = pmt::c32vector_elements(data,vecSize);
 
 		// queue the data
-		if ((!limitQueue) || (dataQueue.size() < maxQueueSize)) {
 	    	gr::thread::scoped_lock guard(d_queuemutex);
-			for (long i=0;i<noutput_items;i++)
-				dataQueue.push(cc_samples[i]);
-		}
+		for (long i=0;i<vecSize;i++)
+			dataQueue.push(cc_samples[i]);
     }
 
     void SourceSelector_impl::sendNewPortMsg(int port) {
@@ -229,16 +217,22 @@ namespace gr {
         gr_vector_void_star &output_items)
     {
     	int curQueueSize = dataQueue.size();
+        gr_complex *out = (gr_complex *) output_items[0];
 
-    	if (!initialQueueSizeMet && (curQueueSize < initialDataQueueRequirement))
-    		return 0;
+    	if (!initialQueueSizeMet && (curQueueSize < initialDataQueueRequirement)) {
+		// std::cout << "iU";
+		// Return zeros to keep the flowgraph running
+		memset((void *)out,0x00,noutput_items*sizeof(gr_complex));
+    		return noutput_items;
+	}
 
     	initialQueueSizeMet = true;
 
-    	if (curQueueSize < minQueueLength)
-    		return 0;
-
-        gr_complex *out = (gr_complex *) output_items[0];
+    	if (curQueueSize < minQueueLength) {
+		// std::cout << "iU";
+		// Return zeros to keep the flowgraph running
+		memset((void *)out,0x00,noutput_items*sizeof(gr_complex));
+        }
 
 		if (curQueueSize >= noutput_items) {
 	    	gr::thread::scoped_lock guard(d_queuemutex);
@@ -251,6 +245,7 @@ namespace gr {
 		}
 
 		// If we're here we didn't have enough data.
+		std::cout << "iU";
 		return 0;
     }
 

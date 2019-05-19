@@ -44,7 +44,7 @@ namespace gr {
 
 		// Data queue management
 		queue<gr_complex> dataQueue;
-		long maxQueueSize;
+		// long maxQueueSize;
 		bool limitQueue;
 
 		long minQueueLength;
