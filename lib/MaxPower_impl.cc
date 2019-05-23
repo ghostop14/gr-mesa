@@ -170,7 +170,8 @@ namespace gr {
     		  if (curState && d_startInitialized) {
     			  // We only need to worry about this if we were high.
     			  std::chrono::time_point<std::chrono::steady_clock> curTimestamp = std::chrono::steady_clock::now();
-    			  if (std::chrono::duration_cast<std::chrono::milliseconds>(curTimestamp-holdTime).count() > (double)d_holdUpSec) {
+    			  // if (std::chrono::duration_cast<std::chrono::milliseconds>(curTimestamp-holdTime).count() > (double)d_holdUpSec) {
+    			  if (std::chrono::duration<double>(curTimestamp-holdTime).count() > (double)d_holdUpSec) {
         			  // std::cout << "[Debug] Sending state false" << std::endl;
     				  sendState(false);
     				  curState = false;
