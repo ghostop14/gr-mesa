@@ -22,5 +22,6 @@ install(FILES
     mesa_MesaEnergyDetector.xml
     mesa_AutoDopplerCorrect.xml
     mesa_MaxPower.xml
-    mesa_SourceSelector.xml DESTINATION share/gnuradio/grc/blocks
+    mesa_SourceSelector.xml
+    mesa_LongTermIntegrator.xml DESTINATION share/gnuradio/grc/blocks
 )

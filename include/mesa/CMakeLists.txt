@@ -26,5 +26,6 @@ install(FILES
     MesaEnergyDetector.h
     AutoDopplerCorrect.h
     MaxPower.h
-    SourceSelector.h DESTINATION include/mesa
+    SourceSelector.h
+    LongTermIntegrator.h DESTINATION include/mesa
 )

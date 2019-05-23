@@ -75,11 +75,11 @@ void FFT::init() {
 	outputBuffer = new SComplex[outputBufferLength()];
 	*/
 	// Aligned memory has better performance:
-	inputBuffer = (SComplex *)fftwf_malloc(inputBufferLength()*sizeof(SComplex));
-	outputBuffer = (SComplex *)fftwf_malloc(outputBufferLength()*sizeof(SComplex));
-	tmpBuff = (float *)fftwf_malloc(outputBufferLength()*sizeof(float));
-
 	size_t memAlignment = volk_get_alignment();
+	inputBuffer = (SComplex *)volk_malloc(inputBufferLength()*sizeof(SComplex),memAlignment);
+	outputBuffer = (SComplex *)volk_malloc(outputBufferLength()*sizeof(SComplex),memAlignment);
+	tmpBuff = (float *)volk_malloc(outputBufferLength()*sizeof(float),memAlignment);
+
 	alignedWindowTaps = (float *)volk_malloc(fftSize*sizeof(float),memAlignment);
 	hasTaps = false;
 
@@ -93,13 +93,13 @@ void FFT::init() {
 		throw std::runtime_error("[FFT] input buffer allocation failed");
 
 	if (!outputBuffer) {
-		fftwf_free(inputBuffer);
+		volk_free(inputBuffer);
 		throw std::runtime_error("[FFT] output buffer allocation failed");
 	}
 
 	if (!tmpBuff) {
-		fftwf_free(inputBuffer);
-		fftwf_free(outputBuffer);
+		volk_free(inputBuffer);
+		volk_free(outputBuffer);
 		throw std::runtime_error("[FFT] tmp buffer allocation failed");
 	}
 
@@ -265,9 +265,9 @@ FFT::~FFT() {
 	delete[] inputBuffer;
 	delete[] outputBuffer;
 	*/
-    fftwf_free(inputBuffer);
-    fftwf_free(outputBuffer);
-    fftwf_free(tmpBuff);
+    volk_free(inputBuffer);
+    volk_free(outputBuffer);
+    volk_free(tmpBuff);
 
 	if (alignedWindowTaps) {
 	  // In any case we need to clear what we had.

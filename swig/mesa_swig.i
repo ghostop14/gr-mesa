@@ -12,6 +12,7 @@
 #include "mesa/AutoDopplerCorrect.h"
 #include "mesa/MaxPower.h"
 #include "mesa/SourceSelector.h"
+#include "mesa/LongTermIntegrator.h"
 %}
 
 
@@ -23,3 +24,5 @@ GR_SWIG_BLOCK_MAGIC2(mesa, AutoDopplerCorrect);
 GR_SWIG_BLOCK_MAGIC2(mesa, MaxPower);
 %include "mesa/SourceSelector.h"
 GR_SWIG_BLOCK_MAGIC2(mesa, SourceSelector);
+%include "mesa/LongTermIntegrator.h"
+GR_SWIG_BLOCK_MAGIC2(mesa, LongTermIntegrator);

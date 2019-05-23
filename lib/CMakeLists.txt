@@ -35,6 +35,7 @@ list(APPEND mesa_sources
     AutoDopplerCorrect_impl.cc
     MaxPower_impl.cc
     SourceSelector_impl.cc
+    LongTermIntegrator_impl.cc
 )
 
 set(mesa_sources "${mesa_sources}" PARENT_SCOPE)

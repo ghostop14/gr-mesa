@@ -12,6 +12,7 @@
 #include "scomplex.h"
 #include <volk/volk.h>
 #include <boost/thread/mutex.hpp>
+#include <fftw3.h>
 
 typedef std::vector<float> FloatVector;
 // These match the FFTW definitions
@@ -32,6 +33,7 @@ using namespace std;
 namespace MesaSignals {
 	// global test function
 	void printArray(FloatVector& arr,string name);
+	void printArray(float *arr,int arrSize,string name);
 
 /*
 	 * FFT Transforms
