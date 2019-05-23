@@ -121,7 +121,7 @@ namespace gr {
     void SourceSelector_impl::sendNewPortMsg(int port) {
 		pmt::pmt_t meta = pmt::make_dict();
 
-		meta = pmt::dict_add(meta, pmt::mp("inputport"), pmt::mp(port));
+		meta = pmt::dict_add(meta, pmt::mp("inputport"), pmt::from_long(port));
 
 		pmt::pmt_t pdu = pmt::cons( meta, pmt::PMT_NIL );
 		message_port_pub(pmt::mp("inputchange"),pdu);
@@ -245,8 +245,9 @@ namespace gr {
 		}
 
 		// If we're here we didn't have enough data.
-		std::cout << "iU";
-		return 0;
+		// std::cout << "iU";
+		memset((void *)out,0x00,noutput_items*sizeof(gr_complex));
+    		return noutput_items;
     }
 
   } /* namespace mesa */
