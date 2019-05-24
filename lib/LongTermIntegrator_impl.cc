@@ -64,7 +64,7 @@ namespace gr {
 	void LongTermIntegrator_impl::runThread() {
 		threadRunning = true;
 		int loopCount = 0;
-		int maxLoop = 30 / 0.01;  // 30 seconds
+		int maxLoop = 5 / 0.01;  // 5 seconds
 
 		usleep(10000); // let primary thread start.
     	startTime = std::chrono::steady_clock::now();
