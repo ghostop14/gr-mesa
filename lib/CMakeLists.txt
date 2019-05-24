@@ -90,7 +90,6 @@ target_link_libraries(
   ${CPPUNIT_LIBRARIES}
   gnuradio-blocks
   gnuradio-filter
-  thrift
   volk
   fftw3f
   fftw3f_threads
