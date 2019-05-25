@@ -65,7 +65,18 @@ namespace gr {
       MaxPower_impl(float sampleRate, int fft_size, float squelchThreshold, float framesToAvg, bool produceOut, float stateThreshold, float holdUpSec);
       ~MaxPower_impl();
 
+      void setup_rpc();
+      virtual float getSquelchThreshold() const;
+      virtual void setSquelchThreshold(float newValue);
+      virtual float getStateThreshold() const;
+      virtual void setStateThreshold(float newValue);
+      virtual float getHoldTime() const;
+      virtual void setHoldTime(float newValue);
+
+
+
       virtual bool stop();
+
 
       // Where all the action really happens
       int work(int noutput_items,

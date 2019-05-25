@@ -65,7 +65,7 @@ namespace gr {
     	// float fBufferCapacity = secondsToAvg * d_sampleRate / (d_framesToAvg * d_fftSize);
 
     	// iBufferCapacity = (int)fBufferCapacity;
-    	iBufferCapacity = 6;
+    	iBufferCapacity = 3;
 
     	if (iBufferCapacity == 0) {
     		iBufferCapacity = 1;
@@ -217,6 +217,87 @@ namespace gr {
         return processData(noutput_items,in);
     }
 
+    float MaxPower_impl::getSquelchThreshold() const {
+    	return d_squelchThreshold;
+    }
+
+    void MaxPower_impl::setSquelchThreshold(float newValue) {
+    	d_squelchThreshold = newValue;
+    	pEnergyAnalyzer->setThreshold(newValue);
+    }
+
+    float MaxPower_impl::getStateThreshold() const {
+    	return d_stateThreshold;
+    }
+
+    void MaxPower_impl::setStateThreshold(float newValue) {
+    	d_stateThreshold = newValue;
+    }
+
+    float MaxPower_impl::getHoldTime() const {
+    	return d_holdUpSec;
+    }
+
+    void MaxPower_impl::setHoldTime(float newValue) {
+    	d_holdUpSec = newValue;
+    }
+
+    void
+	MaxPower_impl::setup_rpc()
+    {
+#ifdef GR_CTRLPORT
+    	// Getters
+      add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_get<MaxPower_impl, float>(
+	  alias(), "SquelchThreshold",
+	  &MaxPower_impl::getSquelchThreshold,
+      pmt::mp(0.0), pmt::mp(-100.0), pmt::mp(0.0),
+      "dB", "SquelchThreshold", RPC_PRIVLVL_MIN,
+      DISPTIME | DISPOPTSTRIP)));
+
+      add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_get<MaxPower_impl, float>(
+	  alias(), "StateThreshold",
+	  &MaxPower_impl::getStateThreshold,
+      pmt::mp(0.0), pmt::mp(-100.0), pmt::mp(0.0),
+      "dB", "StateThreshold", RPC_PRIVLVL_MIN,
+      DISPTIME | DISPOPTSTRIP)));
+
+      add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_get<MaxPower_impl, float>(
+	  alias(), "HoldTime",
+	  &MaxPower_impl::getHoldTime,
+      pmt::mp(0.0), pmt::mp(10.0), pmt::mp(0.0),
+      "s", "HoldTime", RPC_PRIVLVL_MIN,
+      DISPTIME | DISPOPTSTRIP)));
+
+      // Setters
+      add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_set<MaxPower_impl, float>(
+	  alias(), "SquelchThreshold",
+	  &MaxPower_impl::setSquelchThreshold,
+      pmt::mp(0.0), pmt::mp(-100.0), pmt::mp(0.0),
+      "dB", "SquelchThreshold", RPC_PRIVLVL_MIN,
+      DISPTIME | DISPOPTSTRIP)));
+
+      add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_set<MaxPower_impl, float>(
+	  alias(), "StateThreshold",
+	  &MaxPower_impl::setStateThreshold,
+      pmt::mp(0.0), pmt::mp(-100.0), pmt::mp(0.0),
+      "dB", "StateThreshold", RPC_PRIVLVL_MIN,
+      DISPTIME | DISPOPTSTRIP)));
+
+      add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_set<MaxPower_impl, float>(
+	  alias(), "HoldTime",
+	  &MaxPower_impl::setHoldTime,
+      pmt::mp(0.0), pmt::mp(-10.0), pmt::mp(0.0),
+      "dB", "HoldTime", RPC_PRIVLVL_MIN,
+      DISPTIME | DISPOPTSTRIP)));
+
+#endif /* GR_CTRLPORT */
+    }
   } /* namespace mesa */
 } /* namespace gr */
 

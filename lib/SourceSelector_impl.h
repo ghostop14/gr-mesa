@@ -60,6 +60,8 @@ namespace gr {
 		int maxPowerIndex();
 		void queueData(pmt::pmt_t msg);
 
+		int getDataAvailable();
+
 		void sendNewPortMsg(int port);
 
 		virtual void handleMsg(pmt::pmt_t msg, int port);

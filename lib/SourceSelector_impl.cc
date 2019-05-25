@@ -106,6 +106,11 @@ namespace gr {
     	return maxIndex;
     }
 
+    int SourceSelector_impl::getDataAvailable() {
+    	gr::thread::scoped_lock guard(d_queuemutex);
+    	return dataQueue.size();
+    }
+
     void SourceSelector_impl::queueData(pmt::pmt_t msg) {
 		pmt::pmt_t data = pmt::cdr(msg);
 		size_t vecSize = pmt::length(data);
@@ -216,38 +221,33 @@ namespace gr {
         gr_vector_const_void_star &input_items,
         gr_vector_void_star &output_items)
     {
-    	int curQueueSize = dataQueue.size();
+    	int curQueueSize = getDataAvailable();
+
         gr_complex *out = (gr_complex *) output_items[0];
 
     	if (!initialQueueSizeMet && (curQueueSize < initialDataQueueRequirement)) {
 		// std::cout << "iU";
 		// Return zeros to keep the flowgraph running
-		memset((void *)out,0x00,noutput_items*sizeof(gr_complex));
+    		memset((void *)out,0x00,noutput_items*sizeof(gr_complex));
     		return noutput_items;
-	}
+    	}
 
     	initialQueueSizeMet = true;
 
-    	if (curQueueSize < minQueueLength) {
+    	if ( (curQueueSize < minQueueLength) || (curQueueSize < noutput_items))  {
 		// std::cout << "iU";
 		// Return zeros to keep the flowgraph running
-		memset((void *)out,0x00,noutput_items*sizeof(gr_complex));
+			// memset((void *)out,0x00,noutput_items*sizeof(gr_complex));
+			return 0;
         }
 
-		if (curQueueSize >= noutput_items) {
-	    	gr::thread::scoped_lock guard(d_queuemutex);
-			for (long i=0;i<noutput_items;i++) {
-				out[i] = dataQueue.front();
-				dataQueue.pop();
-			}
-
-		    return noutput_items;
+    	gr::thread::scoped_lock guard(d_queuemutex);
+		for (long i=0;i<noutput_items;i++) {
+			out[i] = dataQueue.front();
+			dataQueue.pop();
 		}
 
-		// If we're here we didn't have enough data.
-		// std::cout << "iU";
-		memset((void *)out,0x00,noutput_items*sizeof(gr_complex));
-    		return noutput_items;
+    	return noutput_items;
     }
 
   } /* namespace mesa */

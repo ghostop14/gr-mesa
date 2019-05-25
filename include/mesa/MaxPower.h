@@ -47,6 +47,14 @@ namespace gr {
        * creating new instances.
        */
       static sptr make(float sampleRate, int fft_size, float squelchThreshold, float framesToAvg, bool produceOut, float stateThreshold, float holdUpSec);
+
+      virtual float getSquelchThreshold() const = 0;
+      virtual void setSquelchThreshold(float newValue) = 0;
+      virtual float getStateThreshold() const = 0;
+      virtual void setStateThreshold(float newValue) = 0;
+      virtual float getHoldTime() const = 0;
+      virtual void setHoldTime(float newValue) = 0;
+
     };
 
   } // namespace mesa

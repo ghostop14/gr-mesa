@@ -5,6 +5,9 @@
   <category>[mesa]</category>
   <import>import mesa</import>
   <make>mesa.MaxPower($sampleRate, $fft_size, $squelchThreshold, $framesToAvg, $produceOut,$stateThreshold, $holdUpSec)</make>
+	<callback>setSquelchThreshold($squelchThreshold)</callback>
+	<callback>setStateThreshold($stateThreshold)</callback>
+	<callback>setHoldTime($holdUpSec)</callback>
 	<param>
 		<name>Sample Rate</name>
 		<key>sampleRate</key>
