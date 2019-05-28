@@ -41,7 +41,7 @@ namespace gr {
     SourceSelector_impl::SourceSelector_impl(float holdTime, int numInputs, int defaultInput, int inputBlockSize)
       : gr::sync_block("SourceSelector",
               gr::io_signature::make(0, 0, 0),
-              gr::io_signature::make(1, 1, sizeof(gr_complex)))
+              gr::io_signature::make(0, 1, sizeof(gr_complex)))
     {
     	d_holdTime = holdTime;
     	d_numInputs = numInputs;
@@ -75,7 +75,7 @@ namespace gr {
 		message_port_register_in(pmt::mp("in4"));
         set_msg_handler(pmt::mp("in4"), boost::bind(&SourceSelector_impl::handleMsgIn4, this, _1) );
 
-        message_port_register_out(pmt::mp("inputchange"));
+        message_port_register_out(pmt::mp("inputport"));
 
         if (inputBlockSize > 0)
         	gr::block::set_output_multiple(inputBlockSize);
@@ -118,18 +118,15 @@ namespace gr {
 		cc_samples = pmt::c32vector_elements(data,vecSize);
 
 		// queue the data
-	    	gr::thread::scoped_lock guard(d_queuemutex);
+	    gr::thread::scoped_lock guard(d_queuemutex);
 		for (long i=0;i<vecSize;i++)
 			dataQueue.push(cc_samples[i]);
     }
 
     void SourceSelector_impl::sendNewPortMsg(int port) {
-		pmt::pmt_t meta = pmt::make_dict();
-
-		meta = pmt::dict_add(meta, pmt::mp("inputport"), pmt::from_long(port));
-
-		pmt::pmt_t pdu = pmt::cons( meta, pmt::PMT_NIL );
-		message_port_pub(pmt::mp("inputchange"),pdu);
+    	// send index out
+		pmt::pmt_t pdu = pmt::cons( pmt::intern("inputport"), pmt::from_long(port-1));
+		message_port_pub(pmt::mp("inputport"),pdu);
     }
 
     void SourceSelector_impl::handleMsg(pmt::pmt_t msg, int port) {
@@ -225,7 +222,7 @@ namespace gr {
 
         gr_complex *out = (gr_complex *) output_items[0];
 
-    	if (!initialQueueSizeMet && (curQueueSize < initialDataQueueRequirement)) {
+    	if ( (!initialQueueSizeMet && (curQueueSize < initialDataQueueRequirement)) || (curQueueSize == 0)) {
 		// std::cout << "iU";
 		// Return zeros to keep the flowgraph running
     		memset((void *)out,0x00,noutput_items*sizeof(gr_complex));
@@ -234,20 +231,18 @@ namespace gr {
 
     	initialQueueSizeMet = true;
 
-    	if ( (curQueueSize < minQueueLength) || (curQueueSize < noutput_items))  {
-		// std::cout << "iU";
-		// Return zeros to keep the flowgraph running
-			// memset((void *)out,0x00,noutput_items*sizeof(gr_complex));
-			return 0;
-        }
+    	int itemsProduced = noutput_items;
+
+    	if (curQueueSize < noutput_items)
+    		itemsProduced = curQueueSize;
 
     	gr::thread::scoped_lock guard(d_queuemutex);
-		for (long i=0;i<noutput_items;i++) {
+		for (long i=0;i<itemsProduced;i++) {
 			out[i] = dataQueue.front();
 			dataQueue.pop();
 		}
 
-    	return noutput_items;
+    	return itemsProduced;
     }
 
   } /* namespace mesa */

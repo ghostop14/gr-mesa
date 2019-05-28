@@ -13,6 +13,7 @@
 #include "mesa/MaxPower.h"
 #include "mesa/SourceSelector.h"
 #include "mesa/LongTermIntegrator.h"
+#include "mesa/ioselector.h"
 %}
 
 
@@ -26,3 +27,5 @@ GR_SWIG_BLOCK_MAGIC2(mesa, MaxPower);
 GR_SWIG_BLOCK_MAGIC2(mesa, SourceSelector);
 %include "mesa/LongTermIntegrator.h"
 GR_SWIG_BLOCK_MAGIC2(mesa, LongTermIntegrator);
+%include "mesa/ioselector.h"
+GR_SWIG_BLOCK_MAGIC2(mesa, ioselector);

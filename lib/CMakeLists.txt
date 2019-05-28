@@ -36,6 +36,7 @@ list(APPEND mesa_sources
     MaxPower_impl.cc
     SourceSelector_impl.cc
     LongTermIntegrator_impl.cc
+    ioselector_impl.cc
 )
 
 set(mesa_sources "${mesa_sources}" PARENT_SCOPE)

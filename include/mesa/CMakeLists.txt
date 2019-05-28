@@ -27,5 +27,6 @@ install(FILES
     AutoDopplerCorrect.h
     MaxPower.h
     SourceSelector.h
-    LongTermIntegrator.h DESTINATION include/mesa
+    LongTermIntegrator.h
+    ioselector.h DESTINATION include/mesa
 )
