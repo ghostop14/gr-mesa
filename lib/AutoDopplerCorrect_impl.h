@@ -29,6 +29,9 @@
 
 using namespace MesaSignals;
 
+#define AUTODOPPLER_METHOD_CLOSESTSIGNAL 1
+#define AUTODOPPLER_METHOD_BOXOUTSIDEIN 2
+
 namespace gr {
   namespace mesa {
 
@@ -38,6 +41,7 @@ namespace gr {
         boost::mutex d_mutex;
 
     	EnergyAnalyzer *pEnergyAnalyzer;
+    	int d_detectionMethod;
 
         gr::fxpt_nco	d_nco;
 
@@ -67,7 +71,7 @@ namespace gr {
 
      public:
       AutoDopplerCorrect_impl(float freq, float sampleRate, float maxDrift, float minWidth, float expectedWidth, int shiftHolddownMS, int fft_size,
-      		float squelchThreshold, int framesToAvg, float holdUpSec, bool processMessages);
+      		float squelchThreshold, int framesToAvg, float holdUpSec, bool processMessages, int detectionMethod);
       ~AutoDopplerCorrect_impl();
 
       void setup_rpc();

@@ -167,7 +167,7 @@ main (int argc, char **argv)
 	AutoDopplerCorrect_impl *pAutoDoppler=NULL;
 
 
-	pAutoDoppler = new AutoDopplerCorrect_impl(radio_freq, samp_rate, maxDrift, minWidth, expectedWidth, shiftHoldTime, fftSize,squelchThreshold, numFrames, holdUpSec, false);
+	pAutoDoppler = new AutoDopplerCorrect_impl(radio_freq, samp_rate, maxDrift, minWidth, expectedWidth, shiftHoldTime, fftSize,squelchThreshold, numFrames, holdUpSec, false,AUTODOPPLER_METHOD_CLOSESTSIGNAL);
 
 	// ---------------------------------------------------------------
 

@@ -4,7 +4,7 @@
   <key>mesa_AutoDopplerCorrect</key>
   <category>[mesa]</category>
   <import>import mesa</import>
-  <make>mesa.AutoDopplerCorrect($freq, $sampleRate, $maxDrift, $minWidth, $expectedWidth, $shiftHolddownMS, $fft_size, $squelchThreshold, $framesToAvg, $holdUpSec, $processMessages)</make>
+  <make>mesa.AutoDopplerCorrect($freq, $sampleRate, $maxDrift, $minWidth, $expectedWidth, $shiftHolddownMS, $fft_size, $squelchThreshold, $framesToAvg, $holdUpSec, $processMessages,$detectionMethod)</make>
 	<callback>setSquelch($squelchThreshold)</callback>
 	<callback>setMinWidthHz($minWidthHz)</callback>
 	<callback>setCenterFrequency($radioCenterFreq)</callback>
@@ -81,6 +81,20 @@
 	</param>
 	
 	<param>
+		<name>Detection Method</name>
+		<key>detectionMethod</key>
+		<type>enum</type>
+		<option>
+			<name>Closest Signal</name>
+			<key>1</key>
+		</option>
+		<option>
+			<name>Boxing Outside-In</name>
+			<key>2</key>
+		</option>
+	</param>
+	
+	<param>
 		<name>Message Processing</name>
 		<key>processMessages</key>
 		<type>enum</type>
@@ -139,5 +153,7 @@ If you would like to switch to processing the output as a PDU, enable PDU proces
 NOTES: 
 
 For SQUELCHTHRESHOLD, pick a number that's above any noise floor.  The detector looks for the upward transition from this squelch threshold, therefore everything that's not a signal should be below this threshold, such that everything above it can be assumed to be a signal.
+
+Two methods of detecting the active signal to center are availble.  The first (closest signal) looks for a peak and edges closest to the specified center frequency.  This will work well for a single channel, ASK/FSK/PSK signal.  However, if you have a channelized signal with multiple subchannels, this will not work as well.  A boxing method is available that will look at the spectrum from the edges in looking for the farthest edges to define the signal.
 	</doc>
 </block>

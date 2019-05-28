@@ -37,19 +37,21 @@ namespace gr {
 
     AutoDopplerCorrect::sptr
     AutoDopplerCorrect::make(float freq, float sampleRate, float maxDrift, float minWidth, float expectedWidth, int shiftHolddownMS, int fft_size,
-    		float squelchThreshold, int framesToAvg, float holdUpSec, bool processMessages)
+    		float squelchThreshold, int framesToAvg, float holdUpSec, bool processMessages, int detectionMethod)
     {
       return gnuradio::get_initial_sptr
-        (new AutoDopplerCorrect_impl(freq, sampleRate, maxDrift, minWidth, expectedWidth, shiftHolddownMS, fft_size, squelchThreshold, framesToAvg, holdUpSec, processMessages));
+        (new AutoDopplerCorrect_impl(freq, sampleRate, maxDrift, minWidth, expectedWidth, shiftHolddownMS, fft_size, squelchThreshold, framesToAvg, holdUpSec, processMessages,detectionMethod));
     }
 
     /*
      * The private constructor
      */
     AutoDopplerCorrect_impl::AutoDopplerCorrect_impl(float freq, float sampleRate, float maxDrift, float minWidth, float expectedWidth,
-    		int shiftHolddownMS, int fft_size, float squelchThreshold, int framesToAvg, float holdUpSec, bool processMessages)
+    		int shiftHolddownMS, int fft_size, float squelchThreshold, int framesToAvg, float holdUpSec, bool processMessages, int detectionMethod)
       : gr::sync_block("AutoDopplerCorrect",gr::io_signature::make(1, 1, sizeof(gr_complex)),gr::io_signature::make(1, 1, sizeof(gr_complex)))
     {
+    	d_detectionMethod = detectionMethod;
+
     	d_sampleRate = sampleRate;
     	d_centerFreq = freq;
 
@@ -279,8 +281,23 @@ namespace gr {
         SignalOverviewVector signalVector;
 
         // Last bool param says stop looking on the first detected signal or not.
-        numSignals = pEnergyAnalyzer->findSignals((const float *)&maxSpectrum[0], d_sampleRate,
-      		  d_centerFreq, d_minWidthHz, d_maxWidthHz,	signalVector, false);
+        if (d_detectionMethod == AUTODOPPLER_METHOD_CLOSESTSIGNAL) {
+        	// Look for the closest signal
+            numSignals = pEnergyAnalyzer->findSignals((const float *)&maxSpectrum[0], d_sampleRate,
+          		  d_centerFreq, d_minWidthHz, d_maxWidthHz,	signalVector, false);
+        }
+        else {
+        	// This uses a boxing method, outside-in looking for a signal.
+        	// If you have a channelized signal, this approach will work better.
+
+        	SignalOverview signalOverview;
+            numSignals = pEnergyAnalyzer->findSingleSignal((const float *)&maxSpectrum[0], d_sampleRate,
+          		  d_centerFreq, d_minWidthHz, signalOverview);
+
+            if (numSignals > 0) {
+            	signalVector.push_back(signalOverview);
+            }
+        }
 
         // start initialized tracks if we've picked up a signal and we're in a "high" / have signal state
         bool justDetectedSignal = false; // first detection
