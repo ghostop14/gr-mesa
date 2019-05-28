@@ -113,6 +113,10 @@ namespace gr {
 
     void SourceSelector_impl::queueData(pmt::pmt_t msg) {
 		pmt::pmt_t data = pmt::cdr(msg);
+
+		if (data == pmt::PMT_NIL)
+			return;
+
 		size_t vecSize = pmt::length(data);
 		const gr_complex *cc_samples;
 		cc_samples = pmt::c32vector_elements(data,vecSize);
