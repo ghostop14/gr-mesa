@@ -112,6 +112,8 @@ namespace gr {
     }
 
     void SourceSelector_impl::queueData(pmt::pmt_t msg) {
+		// Since we removed the output, just return.
+		/*
 		pmt::pmt_t data = pmt::cdr(msg);
 
 		if (data == pmt::PMT_NIL)
@@ -125,6 +127,7 @@ namespace gr {
 	    gr::thread::scoped_lock guard(d_queuemutex);
 		for (long i=0;i<vecSize;i++)
 			dataQueue.push(cc_samples[i]);
+		*/
     }
 
     void SourceSelector_impl::sendNewPortMsg(int port) {
