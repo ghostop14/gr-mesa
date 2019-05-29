@@ -194,14 +194,15 @@ namespace gr {
 
 
     void MaxPower_impl::sendState(bool state) {
-        pmt::pmt_t meta = pmt::make_dict();
+        int newState;
+        if (state) {
+            newState = 1;
+        }
+        else {
+            newState = 0;
+        }
 
-        if (state)
-        	meta = pmt::dict_add(meta, pmt::mp("state"), pmt::mp(1));
-        else
-        	meta = pmt::dict_add(meta, pmt::mp("state"), pmt::mp(0));
-
-        pmt::pmt_t pdu = pmt::cons( meta, pmt::PMT_NIL );
+        pmt::pmt_t pdu = pmt::cons( pmt::intern("state"), pmt::from_long(newState) );
 
 		message_port_pub(pmt::mp("state"),pdu);
 
