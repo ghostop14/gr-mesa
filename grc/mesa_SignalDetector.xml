@@ -4,7 +4,8 @@
   <key>mesa_SignalDetector</key>
   <category>[mesa]</category>
   <import>import mesa</import>
-  <make>mesa.SignalDetector($fft_size, $squelchThreshold, $minWidthHz, $maxWidthHz, $radioCenterFreq, $sampleRate, $holdUpSec, $framesToAvg, $genSignalPDUs, $enableDebug)</make>
+  <make>mesa.SignalDetector($fft_size, $squelchThreshold, $minWidthHz, $maxWidthHz, $radioCenterFreq, $sampleRate, 
+  			$holdUpSec, $framesToAvg, $genSignalPDUs, $enableDebug,$detectionMethod)</make>
 	<callback>setSquelch($squelchThreshold)</callback>
 	<callback>setMinWidthHz($minWidthHz)</callback>
 	<callback>setMaxWidthHz($maxWidthHz)</callback>
@@ -63,6 +64,20 @@
 		<key>framesToAvg</key>
 		<value>6</value>
 		<type>int</type>
+	</param>
+	
+	<param>
+		<name>Detection Method</name>
+		<key>detectionMethod</key>
+		<type>enum</type>
+		<option>
+			<name>Separate Signals</name>
+			<key>1</key>
+		</option>
+		<option>
+			<name>Single Channelized (Boxing)</name>
+			<key>2</key>
+		</option>
 	</param>
 	
 	<param>

@@ -47,7 +47,7 @@ namespace gr {
        * creating new instances.
        */
       static sptr make(int fftsize, float squelchThreshold, float minWidthHz, float maxWidthHz, float radioCenterFreq, float sampleRate, float holdUpSec,
-    		  	  	  int framesToAvg, bool genSignalPDUs, bool enableDebug);
+    		  	  	  int framesToAvg, bool genSignalPDUs, bool enableDebug, int detectionMethod);
 
       virtual float getSquelch() const = 0;
       virtual void setSquelch(float newValue) = 0;

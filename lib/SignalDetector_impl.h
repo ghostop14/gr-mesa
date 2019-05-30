@@ -28,6 +28,9 @@
 
 using namespace MesaSignals;
 
+#define SIGDETECTOR_METHOD_SEPARATESIGNALS 1
+#define SIGDETECTOR_METHOD_BOXOUTSIDEIN 2
+
 namespace gr {
   namespace mesa {
 
@@ -36,7 +39,9 @@ namespace gr {
      protected:
         boost::mutex d_mutex;
     	EnergyAnalyzer *pEnergyAnalyzer;
-        gr_complex *pMsgOutBuff;
+    	int d_detectionMethod;
+
+    	gr_complex *pMsgOutBuff;
         int msgBufferSize;
 
     	float d_sampleRate;
@@ -61,7 +66,7 @@ namespace gr {
 
      public:
       SignalDetector_impl(int fftsize, float squelchThreshold, float minWidthHz, float maxWidthHz, float radioCenterFreq, float sampleRate, float holdUpSec,
-    		  	  	  	  	  int framesToAvg, bool genSignalPDUs, bool enableDebug);
+    		  	  	  	  	  int framesToAvg, bool genSignalPDUs, bool enableDebug, int detectionMethod);
       virtual ~SignalDetector_impl();
 
       virtual bool stop();

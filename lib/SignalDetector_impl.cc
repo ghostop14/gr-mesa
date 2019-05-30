@@ -33,17 +33,18 @@ namespace gr {
 
     SignalDetector::sptr
     SignalDetector::make(int fftsize, float squelchThreshold, float minWidthHz, float maxWidthHz, float radioCenterFreq, float sampleRate, float holdUpSec,
-    						int framesToAvg, bool genSignalPDUs, bool enableDebug)
+    						int framesToAvg, bool genSignalPDUs, bool enableDebug, int detectionMethod)
     {
       return gnuradio::get_initial_sptr
-        (new SignalDetector_impl(fftsize, squelchThreshold, minWidthHz, maxWidthHz, radioCenterFreq, sampleRate, holdUpSec, framesToAvg, genSignalPDUs, enableDebug));
+        (new SignalDetector_impl(fftsize, squelchThreshold, minWidthHz, maxWidthHz, radioCenterFreq, sampleRate, holdUpSec,
+        		framesToAvg, genSignalPDUs, enableDebug, detectionMethod));
     }
 
     /*
      * The private constructor
      */
     SignalDetector_impl::SignalDetector_impl(int fftsize, float squelchThreshold, float minWidthHz, float maxWidthHz, float radioCenterFreq, float sampleRate,
-    												float holdUpSec, int framesToAvg, bool genSignalPDUs, bool enableDebug)
+    												float holdUpSec, int framesToAvg, bool genSignalPDUs, bool enableDebug, int detectionMethod)
       : gr::sync_block("SignalDetector",
               gr::io_signature::make(1, 1, sizeof(gr_complex)),
               gr::io_signature::make(1, 1, sizeof(gr_complex)))
@@ -70,6 +71,7 @@ namespace gr {
 
     	// Create energy analyzer
     	pEnergyAnalyzer = new EnergyAnalyzer(fftsize,squelchThreshold, minDutyCycle);
+    	d_detectionMethod = detectionMethod;
 
     	// Make sure we have a multiple of fftsize coming in
         gr::block::set_output_multiple(fftsize*d_framesToAvg);
@@ -80,6 +82,7 @@ namespace gr {
 
         message_port_register_out(pmt::mp("signaldetect"));
         message_port_register_out(pmt::mp("signals"));
+        message_port_register_out(pmt::mp("state"));
     }
 
     float SignalDetector_impl::calcMinDutyCycle() {
@@ -221,9 +224,23 @@ namespace gr {
         int numSignals = 0;
         SignalOverviewVector signalVector;
 
-        // Last param says stop looking on the first detected signal.
-        numSignals = pEnergyAnalyzer->findSignals((const float *)&maxSpectrum[0], d_sampleRate,
-      		  d_centerFreq, d_minWidthHz, d_maxWidthHz,	signalVector, false);
+        if (d_detectionMethod == SIGDETECTOR_METHOD_SEPARATESIGNALS) {
+            // Last param says stop looking on the first detected signal.
+            numSignals = pEnergyAnalyzer->findSignals((const float *)&maxSpectrum[0], d_sampleRate,
+          		  d_centerFreq, d_minWidthHz, d_maxWidthHz,	signalVector, false);
+        }
+        else {
+        	// This uses a boxing method, outside-in looking for a signal.
+        	// If you have a channelized signal, this approach will work better.
+
+        	SignalOverview signalOverview;
+            numSignals = pEnergyAnalyzer->findSingleSignal((const float *)&maxSpectrum[0], d_sampleRate,
+          		  d_centerFreq, d_minWidthHz, signalOverview);
+
+            if (numSignals > 0) {
+            	signalVector.push_back(signalOverview);
+            }
+        }
 
         // If we have signals, deal with that (set PDU, etc.)
         // Tell runtime system how many output items we produced.

@@ -109,6 +109,7 @@ namespace gr {
         message_port_register_out(pmt::mp("msgout"));
         message_port_register_out(pmt::mp("freq_info"));
         message_port_register_out(pmt::mp("freq_shift"));
+        message_port_register_out(pmt::mp("state"));
     }
 
     bool AutoDopplerCorrect_impl::stop() {
@@ -199,7 +200,21 @@ namespace gr {
     	d_maxDrift = newValue;
     }
 
-    void AutoDopplerCorrect_impl::handleMsgIn(pmt::pmt_t msg) {
+    void AutoDopplerCorrect_impl::sendState(bool state) {
+        int newState;
+        if (state) {
+            newState = 1;
+        }
+        else {
+            newState = 0;
+        }
+
+        pmt::pmt_t pdu = pmt::cons( pmt::intern("state"), pmt::from_long(newState) );
+
+		message_port_pub(pmt::mp("state"),pdu);
+
+    }
+   void AutoDopplerCorrect_impl::handleMsgIn(pmt::pmt_t msg) {
     	if (!d_processMessages)
     		return;
 
@@ -360,6 +375,7 @@ namespace gr {
 
 					  // NOTE: freq matches the key looked for by the signal source block if needed.
 					  meta = pmt::dict_add(meta, pmt::mp("numsignals"), pmt::mp(signalVector.size()));
+					  meta = pmt::dict_add(meta, pmt::mp("decisionvalue"), pmt::mp(signalVector.size()));
 					  meta = pmt::dict_add(meta, pmt::mp("closestsignalnum"), pmt::mp(closestIndex+1));
 					  meta = pmt::dict_add(meta, pmt::mp("freq"), pmt::mp(d_currentFreqShiftDelta));
 					  meta = pmt::dict_add(meta, pmt::mp("freqoffset"), pmt::mp(d_currentFreqShiftDelta));
@@ -376,6 +392,7 @@ namespace gr {
 				  }
 				  else {
 					  *pMetadata = pmt::dict_add(*pMetadata, pmt::mp("numsignals"), pmt::mp(signalVector.size()));
+					  *pMetadata = pmt::dict_add(*pMetadata, pmt::mp("decisionvalue"), pmt::mp(signalVector.size()));
 					  *pMetadata = pmt::dict_add(*pMetadata, pmt::mp("closestsignalnum"), pmt::mp(closestIndex+1));
 					  *pMetadata = pmt::dict_add(*pMetadata, pmt::mp("widthHz"), pmt::mp(signalVector[closestIndex].widthHz));
 					  *pMetadata = pmt::dict_add(*pMetadata, pmt::mp("signalpower"), pmt::mp(signalVector[closestIndex].maxPower));
@@ -449,6 +466,7 @@ namespace gr {
 
   	      		          // NOTE: freq matches the key looked for by the signal source block if needed.
   	    				  meta = pmt::dict_add(meta, pmt::mp("numsignals"), pmt::mp(signalVector.size()));
+  	    				  meta = pmt::dict_add(meta, pmt::mp("decisionvalue"), pmt::mp(signalVector.size()));
   	    				  meta = pmt::dict_add(meta, pmt::mp("closestsignal"), pmt::mp(closestIndex+1));
   	      		          meta = pmt::dict_add(meta, pmt::mp("freq"), pmt::mp(d_currentFreqShiftDelta));
   	      		          meta = pmt::dict_add(meta, pmt::mp("freqoffset"), pmt::mp(d_currentFreqShiftDelta));
@@ -465,6 +483,7 @@ namespace gr {
   	      			  }
   	      			  else {
   	      				  *pMetadata = pmt::dict_add(*pMetadata, pmt::mp("numsignals"), pmt::mp(signalVector.size()));
+  	      				  *pMetadata = pmt::dict_add(*pMetadata, pmt::mp("decisionvalue"), pmt::mp(signalVector.size()));
   	    				  *pMetadata = pmt::dict_add(*pMetadata, pmt::mp("closestsignal"), pmt::mp(closestIndex+1));
   						  *pMetadata = pmt::dict_add(*pMetadata, pmt::mp("widthHz"), pmt::mp(signalVector[closestIndex].widthHz));
   						  *pMetadata = pmt::dict_add(*pMetadata, pmt::mp("signalpower"), pmt::mp(signalVector[closestIndex].maxPower));
@@ -533,22 +552,28 @@ namespace gr {
             pmt::pmt_t meta = pmt::make_dict();
 
             meta = pmt::dict_add(meta, pmt::mp("state"), pmt::mp(1));
+			meta = pmt::dict_add(meta, pmt::mp("decisionvalue"), pmt::mp(signalVector.size()));
 			meta = pmt::dict_add(meta, pmt::mp("numsignals"), pmt::mp(signalVector.size()));
 			meta = pmt::dict_add(meta, pmt::mp("closestsignal"), pmt::mp(closestIndex+1));
 
             pmt::pmt_t pdu = pmt::cons( meta, pmt::PMT_NIL );
 		    if (!testMode)
 			  message_port_pub(pmt::mp("signaldetect"),pdu);
+
+		    sendState(true);
         }
         // if Just lost signal, send PDU
         if (lostSignal) {
             pmt::pmt_t meta = pmt::make_dict();
-
             meta = pmt::dict_add(meta, pmt::mp("state"), pmt::mp(0));
+			meta = pmt::dict_add(meta, pmt::mp("decisionvalue"), pmt::mp(0));
+			meta = pmt::dict_add(meta, pmt::mp("numsignals"), pmt::mp(signalVector.size()));
 
             pmt::pmt_t pdu = pmt::cons( meta, pmt::PMT_NIL );
 			if (!testMode)
 			   message_port_pub(pmt::mp("signaldetect"),pdu);
+
+		    sendState(false);
         }
 
         // Tell runtime system how many output items we produced.

@@ -68,6 +68,7 @@ namespace gr {
 		std::chrono::time_point<std::chrono::steady_clock> lastSeen, lastShifted;
 
 		virtual void sendMessageData(gr_complex *data,long datasize, float signalCenterFreq, float signalWidth, float maxPower, pmt::pmt_t *pMetadata);
+		void sendState(bool state);
 
      public:
       AutoDopplerCorrect_impl(float freq, float sampleRate, float maxDrift, float minWidth, float expectedWidth, int shiftHolddownMS, int fft_size,
