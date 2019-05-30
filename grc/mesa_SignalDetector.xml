@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <block>
   <name>Signal Detector</name>
-  <key>mesa_MesaEnergyDetector</key>
+  <key>mesa_SignalDetector</key>
   <category>[mesa]</category>
   <import>import mesa</import>
-  <make>mesa.MesaEnergyDetector($fft_size, $squelchThreshold, $minWidthHz, $maxWidthHz, $radioCenterFreq, $sampleRate, $holdUpSec, $framesToAvg, $genSignalPDUs, $enableDebug)</make>
+  <make>mesa.SignalDetector($fft_size, $squelchThreshold, $minWidthHz, $maxWidthHz, $radioCenterFreq, $sampleRate, $holdUpSec, $framesToAvg, $genSignalPDUs, $enableDebug)</make>
 	<callback>setSquelch($squelchThreshold)</callback>
 	<callback>setMinWidthHz($minWidthHz)</callback>
 	<callback>setMaxWidthHz($maxWidthHz)</callback>

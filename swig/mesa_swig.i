@@ -8,7 +8,7 @@
 %include "mesa_swig_doc.i"
 
 %{
-#include "mesa/MesaEnergyDetector.h"
+#include "mesa/SignalDetector.h"
 #include "mesa/AutoDopplerCorrect.h"
 #include "mesa/MaxPower.h"
 #include "mesa/SourceSelector.h"
@@ -17,8 +17,8 @@
 %}
 
 
-%include "mesa/MesaEnergyDetector.h"
-GR_SWIG_BLOCK_MAGIC2(mesa, MesaEnergyDetector);
+%include "mesa/SignalDetector.h"
+GR_SWIG_BLOCK_MAGIC2(mesa, SignalDetector);
 %include "mesa/AutoDopplerCorrect.h"
 GR_SWIG_BLOCK_MAGIC2(mesa, AutoDopplerCorrect);
 %include "mesa/MaxPower.h"

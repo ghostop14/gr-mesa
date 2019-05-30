@@ -19,7 +19,7 @@
 # Boston, MA 02110-1301, USA.
 
 install(FILES
-    mesa_MesaEnergyDetector.xml
+    mesa_SignalDetector.xml
     mesa_AutoDopplerCorrect.xml
     mesa_MaxPower.xml
     mesa_SourceSelector.xml

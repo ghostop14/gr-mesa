@@ -18,10 +18,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_MESA_MESAENERGYDETECTOR_IMPL_H
-#define INCLUDED_MESA_MESAENERGYDETECTOR_IMPL_H
+#ifndef INCLUDED_MESA_SIGNALDETECTOR_IMPL_H
+#define INCLUDED_MESA_SIGNALDETECTOR_IMPL_H
 
-#include <mesa/MesaEnergyDetector.h>
+#include <mesa/SignalDetector.h>
 #include "signals_mesa.h"
 #include <chrono>
 #include <ctime>
@@ -31,7 +31,7 @@ using namespace MesaSignals;
 namespace gr {
   namespace mesa {
 
-    class MesaEnergyDetector_impl : public MesaEnergyDetector
+    class SignalDetector_impl : public SignalDetector
     {
      protected:
         boost::mutex d_mutex;
@@ -60,9 +60,9 @@ namespace gr {
 		void sendState(bool state);
 
      public:
-      MesaEnergyDetector_impl(int fftsize, float squelchThreshold, float minWidthHz, float maxWidthHz, float radioCenterFreq, float sampleRate, float holdUpSec,
+      SignalDetector_impl(int fftsize, float squelchThreshold, float minWidthHz, float maxWidthHz, float radioCenterFreq, float sampleRate, float holdUpSec,
     		  	  	  	  	  int framesToAvg, bool genSignalPDUs, bool enableDebug);
-      virtual ~MesaEnergyDetector_impl();
+      virtual ~SignalDetector_impl();
 
       virtual bool stop();
 
@@ -90,5 +90,5 @@ namespace gr {
   } // namespace mesa
 } // namespace gr
 
-#endif /* INCLUDED_MESA_MESAENERGYDETECTOR_IMPL_H */
+#endif /* INCLUDED_MESA_SIGNALDETECTOR_IMPL_H */
 

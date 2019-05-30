@@ -60,7 +60,7 @@
 #define	OUR_O_LARGEFILE 0
 #endif
 
-#include "MesaEnergyDetector_impl.h"
+#include "SourceSelector_impl.h"
 
 FILE *d_fp = NULL;
 

@@ -19,8 +19,8 @@
  */
 
 
-#ifndef INCLUDED_MESA_MESAENERGYDETECTOR_H
-#define INCLUDED_MESA_MESAENERGYDETECTOR_H
+#ifndef INCLUDED_MESA_SIGNALDETECTOR_H
+#define INCLUDED_MESA_SIGNALDETECTOR_H
 
 #include <mesa/api.h>
 #include <gnuradio/sync_block.h>
@@ -33,17 +33,17 @@ namespace gr {
      * \ingroup mesa
      *
      */
-    class MESA_API MesaEnergyDetector : virtual public gr::sync_block
+    class MESA_API SignalDetector : virtual public gr::sync_block
     {
      public:
-      typedef boost::shared_ptr<MesaEnergyDetector> sptr;
+      typedef boost::shared_ptr<SignalDetector> sptr;
 
       /*!
-       * \brief Return a shared_ptr to a new instance of mesa::MesaEnergyDetector.
+       * \brief Return a shared_ptr to a new instance of mesa::SignalDetector.
        *
-       * To avoid accidental use of raw pointers, mesa::MesaEnergyDetector's
+       * To avoid accidental use of raw pointers, mesa::SignalDetector's
        * constructor is in a private implementation
-       * class. mesa::MesaEnergyDetector::make is the public interface for
+       * class. mesa::SignalDetector::make is the public interface for
        * creating new instances.
        */
       static sptr make(int fftsize, float squelchThreshold, float minWidthHz, float maxWidthHz, float radioCenterFreq, float sampleRate, float holdUpSec,
@@ -65,5 +65,5 @@ namespace gr {
   } // namespace mesa
 } // namespace gr
 
-#endif /* INCLUDED_MESA_MESAENERGYDETECTOR_H */
+#endif /* INCLUDED_MESA_SIGNALDETECTOR_H */
 

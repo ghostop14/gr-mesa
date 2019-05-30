@@ -31,7 +31,7 @@ link_directories(${Boost_LIBRARY_DIRS})
 
 list(APPEND mesa_sources
 	signals_mesa.cc
-    MesaEnergyDetector_impl.cc
+    SignalDetector_impl.cc
     AutoDopplerCorrect_impl.cc
     MaxPower_impl.cc
     SourceSelector_impl.cc
@@ -77,7 +77,7 @@ list(APPEND test_mesa_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/test_mesa.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_mesa.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/signals_mesa.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/MesaEnergyDetector_impl.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/SignalDetector_impl.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/AutoDopplerCorrect_impl.cc
 )
 

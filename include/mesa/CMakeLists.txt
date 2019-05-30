@@ -23,7 +23,7 @@
 ########################################################################
 install(FILES
     api.h
-    MesaEnergyDetector.h
+    SignalDetector.h
     AutoDopplerCorrect.h
     MaxPower.h
     SourceSelector.h

@@ -25,26 +25,26 @@
 #include <cstring> // memcpy
 
 #include <gnuradio/io_signature.h>
-#include "MesaEnergyDetector_impl.h"
+#include "SignalDetector_impl.h"
 
 
 namespace gr {
   namespace mesa {
 
-    MesaEnergyDetector::sptr
-    MesaEnergyDetector::make(int fftsize, float squelchThreshold, float minWidthHz, float maxWidthHz, float radioCenterFreq, float sampleRate, float holdUpSec,
+    SignalDetector::sptr
+    SignalDetector::make(int fftsize, float squelchThreshold, float minWidthHz, float maxWidthHz, float radioCenterFreq, float sampleRate, float holdUpSec,
     						int framesToAvg, bool genSignalPDUs, bool enableDebug)
     {
       return gnuradio::get_initial_sptr
-        (new MesaEnergyDetector_impl(fftsize, squelchThreshold, minWidthHz, maxWidthHz, radioCenterFreq, sampleRate, holdUpSec, framesToAvg, genSignalPDUs, enableDebug));
+        (new SignalDetector_impl(fftsize, squelchThreshold, minWidthHz, maxWidthHz, radioCenterFreq, sampleRate, holdUpSec, framesToAvg, genSignalPDUs, enableDebug));
     }
 
     /*
      * The private constructor
      */
-    MesaEnergyDetector_impl::MesaEnergyDetector_impl(int fftsize, float squelchThreshold, float minWidthHz, float maxWidthHz, float radioCenterFreq, float sampleRate,
+    SignalDetector_impl::SignalDetector_impl(int fftsize, float squelchThreshold, float minWidthHz, float maxWidthHz, float radioCenterFreq, float sampleRate,
     												float holdUpSec, int framesToAvg, bool genSignalPDUs, bool enableDebug)
-      : gr::sync_block("MesaEnergyDetector",
+      : gr::sync_block("SignalDetector",
               gr::io_signature::make(1, 1, sizeof(gr_complex)),
               gr::io_signature::make(1, 1, sizeof(gr_complex)))
     {
@@ -76,13 +76,13 @@ namespace gr {
 
         // Set up PDUs
 		message_port_register_in(pmt::mp("msgin"));
-        set_msg_handler(pmt::mp("msgin"), boost::bind(&MesaEnergyDetector_impl::handleMsgIn, this, _1) );
+        set_msg_handler(pmt::mp("msgin"), boost::bind(&SignalDetector_impl::handleMsgIn, this, _1) );
 
         message_port_register_out(pmt::mp("signaldetect"));
         message_port_register_out(pmt::mp("signals"));
     }
 
-    float MesaEnergyDetector_impl::calcMinDutyCycle() {
+    float SignalDetector_impl::calcMinDutyCycle() {
     	float hzPerBucket = d_sampleRate / d_fftSize;
     	float binsForMinHz = d_minWidthHz / hzPerBucket;
     	float minDutyCycle = binsForMinHz / d_fftSize;
@@ -90,22 +90,22 @@ namespace gr {
     	return minDutyCycle;
     }
 
-    float MesaEnergyDetector_impl::getSquelch() const {
+    float SignalDetector_impl::getSquelch() const {
     	return pEnergyAnalyzer->getThreshold();
     }
 
-    void MesaEnergyDetector_impl::setSquelch(float newValue) {
+    void SignalDetector_impl::setSquelch(float newValue) {
     	pEnergyAnalyzer->setThreshold(newValue);
 
     	if (d_enableDebug)
     		std::cout << "[Mesa Detector] Changing squelch to " << newValue << std::endl;
     }
 
-    float MesaEnergyDetector_impl::getCenterFrequency() const {
+    float SignalDetector_impl::getCenterFrequency() const {
     	return d_centerFreq;
     }
 
-    void MesaEnergyDetector_impl::setCenterFrequency(float newValue) {
+    void SignalDetector_impl::setCenterFrequency(float newValue) {
     	gr::thread::scoped_lock guard(d_mutex);
 
     	if (d_startInitialized) {
@@ -125,11 +125,11 @@ namespace gr {
     		std::cout << "[Mesa Detector] Changing frequency to " << newValue << std::endl;
     }
 
-    float MesaEnergyDetector_impl::getMinWidthHz() const {
+    float SignalDetector_impl::getMinWidthHz() const {
     	return d_minWidthHz;
     }
 
-    void MesaEnergyDetector_impl::setMinWidthHz(float newValue) {
+    void SignalDetector_impl::setMinWidthHz(float newValue) {
     	// Calc Duty Cycle
     	d_minWidthHz = newValue;
     	float minDutyCycle = calcMinDutyCycle();
@@ -139,17 +139,17 @@ namespace gr {
     		std::cout << "[Mesa Detector] Changing min width (Hz) to " << newValue << std::endl;
     }
 
-    float MesaEnergyDetector_impl::getMaxWidthHz() const {
+    float SignalDetector_impl::getMaxWidthHz() const {
     	return d_maxWidthHz;
     }
 
-    void MesaEnergyDetector_impl::setMaxWidthHz(float newValue) {
+    void SignalDetector_impl::setMaxWidthHz(float newValue) {
     	d_maxWidthHz = newValue;
     	if (d_enableDebug)
     		std::cout << "[Mesa Detector] Changing max width (Hz) to " << newValue << std::endl;
     }
 
-    bool MesaEnergyDetector_impl::stop() {
+    bool SignalDetector_impl::stop() {
     	if (pEnergyAnalyzer) {
         	delete pEnergyAnalyzer;
         	pEnergyAnalyzer = NULL;
@@ -168,12 +168,12 @@ namespace gr {
     /*
      * Our virtual destructor.
      */
-    MesaEnergyDetector_impl::~MesaEnergyDetector_impl()
+    SignalDetector_impl::~SignalDetector_impl()
     {
     	bool retVal = stop();
     }
 
-    void MesaEnergyDetector_impl::handleMsgIn(pmt::pmt_t msg) {
+    void SignalDetector_impl::handleMsgIn(pmt::pmt_t msg) {
     	if (!d_genSignalPDUs)
     		return;
 
@@ -195,7 +195,7 @@ namespace gr {
 		int result = processData(noutput_items,cc_samples,pMsgOutBuff,&inputMetadata);
     }
 
-    void MesaEnergyDetector_impl::sendState(bool state) {
+    void SignalDetector_impl::sendState(bool state) {
         int newState;
         if (state) {
             newState = 1;
@@ -211,7 +211,7 @@ namespace gr {
     }
 
 
-    int MesaEnergyDetector_impl::processData(int noutput_items,const gr_complex *in,gr_complex *out, pmt::pmt_t *pMetadata) {
+    int SignalDetector_impl::processData(int noutput_items,const gr_complex *in,gr_complex *out, pmt::pmt_t *pMetadata) {
     	gr::thread::scoped_lock guard(d_mutex);
         // First get the max hold curve for this block
         FloatVector maxSpectrum;
@@ -395,7 +395,7 @@ namespace gr {
         return noutput_items;
     }
 
-    int MesaEnergyDetector_impl::work(int noutput_items,
+    int SignalDetector_impl::work(int noutput_items,
         gr_vector_const_void_star &input_items,
         gr_vector_void_star &output_items)
     {
@@ -407,71 +407,71 @@ namespace gr {
 
 
     void
-	MesaEnergyDetector_impl::setup_rpc()
+	SignalDetector_impl::setup_rpc()
     {
 #ifdef GR_CTRLPORT
     	// Getters
       add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_get<MesaEnergyDetector, float>(
+        rpcbasic_sptr(new rpcbasic_register_get<SignalDetector, float>(
 	  alias(), "Squelch",
-	  &MesaEnergyDetector::getSquelch,
+	  &SignalDetector::getSquelch,
       pmt::mp(0.0), pmt::mp(100.0e6), pmt::mp(0.0),
       "dB", "Squelch", RPC_PRIVLVL_MIN,
       DISPTIME | DISPOPTSTRIP)));
 
       add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_get<MesaEnergyDetector, float>(
+        rpcbasic_sptr(new rpcbasic_register_get<SignalDetector, float>(
 	  alias(), "minWidthHz",
-	  &MesaEnergyDetector::getMinWidthHz,
+	  &SignalDetector::getMinWidthHz,
       pmt::mp(0.0), pmt::mp(100.0e6), pmt::mp(0.0),
       "Hz", "minWidthHz", RPC_PRIVLVL_MIN,
       DISPTIME | DISPOPTSTRIP)));
 
       add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_get<MesaEnergyDetector, float>(
+        rpcbasic_sptr(new rpcbasic_register_get<SignalDetector, float>(
 	  alias(), "maxWidthHz",
-	  &MesaEnergyDetector::getMaxWidthHz,
+	  &SignalDetector::getMaxWidthHz,
       pmt::mp(0.0), pmt::mp(100.0e6), pmt::mp(0.0),
       "Hz", "maxWidthHz", RPC_PRIVLVL_MIN,
       DISPTIME | DISPOPTSTRIP)));
 
       add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_get<MesaEnergyDetector, float>(
+        rpcbasic_sptr(new rpcbasic_register_get<SignalDetector, float>(
 	  alias(), "CenterFreq",
-	  &MesaEnergyDetector::getCenterFrequency,
+	  &SignalDetector::getCenterFrequency,
       pmt::mp(0.0), pmt::mp(100.0e6), pmt::mp(0.0),
       "Hz", "CenterFreq", RPC_PRIVLVL_MIN,
       DISPTIME | DISPOPTSTRIP)));
 
       // Setters
       add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_set<MesaEnergyDetector, float>(
+        rpcbasic_sptr(new rpcbasic_register_set<SignalDetector, float>(
 	  alias(), "Squelch",
-	  &MesaEnergyDetector::setSquelch,
+	  &SignalDetector::setSquelch,
       pmt::mp(0.0), pmt::mp(100.0e6), pmt::mp(0.0),
       "dB", "Squelch", RPC_PRIVLVL_MIN,
       DISPTIME | DISPOPTSTRIP)));
 
       add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_set<MesaEnergyDetector, float>(
+        rpcbasic_sptr(new rpcbasic_register_set<SignalDetector, float>(
 	  alias(), "minWidthHz",
-	  &MesaEnergyDetector::setMinWidthHz,
+	  &SignalDetector::setMinWidthHz,
       pmt::mp(0.0), pmt::mp(100.0e6), pmt::mp(0.0),
       "Hz", "minWidthHz", RPC_PRIVLVL_MIN,
       DISPTIME | DISPOPTSTRIP)));
 
       add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_set<MesaEnergyDetector, float>(
+        rpcbasic_sptr(new rpcbasic_register_set<SignalDetector, float>(
 	  alias(), "maxWidthHz",
-	  &MesaEnergyDetector::setMaxWidthHz,
+	  &SignalDetector::setMaxWidthHz,
       pmt::mp(0.0), pmt::mp(100.0e6), pmt::mp(0.0),
       "Hz", "maxWidthHz", RPC_PRIVLVL_MIN,
       DISPTIME | DISPOPTSTRIP)));
 
       add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_set<MesaEnergyDetector, float>(
+        rpcbasic_sptr(new rpcbasic_register_set<SignalDetector, float>(
 	  alias(), "CenterFreq",
-	  &MesaEnergyDetector::setCenterFrequency,
+	  &SignalDetector::setCenterFrequency,
       pmt::mp(0.0), pmt::mp(100.0e6), pmt::mp(0.0),
       "Hz", "CenterFreq", RPC_PRIVLVL_MIN,
       DISPTIME | DISPOPTSTRIP)));
