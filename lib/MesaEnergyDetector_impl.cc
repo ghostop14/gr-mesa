@@ -195,6 +195,22 @@ namespace gr {
 		int result = processData(noutput_items,cc_samples,pMsgOutBuff,&inputMetadata);
     }
 
+    void MesaEnergyDetector_impl::sendState(bool state) {
+        int newState;
+        if (state) {
+            newState = 1;
+        }
+        else {
+            newState = 0;
+        }
+
+        pmt::pmt_t pdu = pmt::cons( pmt::intern("state"), pmt::from_long(newState) );
+
+		message_port_pub(pmt::mp("state"),pdu);
+
+    }
+
+
     int MesaEnergyDetector_impl::processData(int noutput_items,const gr_complex *in,gr_complex *out, pmt::pmt_t *pMetadata) {
     	gr::thread::scoped_lock guard(d_mutex);
         // First get the max hold curve for this block
@@ -287,6 +303,7 @@ namespace gr {
 			pmt::pmt_t meta = pmt::make_dict();
 
 			meta = pmt::dict_add(meta, pmt::mp("state"), pmt::mp(1));
+			meta = pmt::dict_add(meta, pmt::mp("decisionvalue"), pmt::mp(signalVector.size()));
 			meta = pmt::dict_add(meta, pmt::mp("numsignals"), pmt::mp(signalVector.size()));
 			meta = pmt::dict_add(meta, pmt::mp("radioFreq"), pmt::mp(d_centerFreq));
 			meta = pmt::dict_add(meta, pmt::mp("sampleRate"), pmt::mp(d_sampleRate));
@@ -296,17 +313,22 @@ namespace gr {
 
 			pmt::pmt_t pdu = pmt::cons( meta, pmt::PMT_NIL );
 			message_port_pub(pmt::mp("signaldetect"),pdu);
+
+			sendState(true);
         }
         // if Just lost signal, send PDU
         if (lostSignal) {
             pmt::pmt_t meta = pmt::make_dict();
 
 			meta = pmt::dict_add(meta, pmt::mp("state"), pmt::mp(0));
+			meta = pmt::dict_add(meta, pmt::mp("decisionvalue"), pmt::mp(0));
 			meta = pmt::dict_add(meta, pmt::mp("radioFreq"), pmt::mp(d_centerFreq));
 			meta = pmt::dict_add(meta, pmt::mp("sampleRate"), pmt::mp(d_sampleRate));
 
             pmt::pmt_t pdu = pmt::cons( meta, pmt::PMT_NIL );
             message_port_pub(pmt::mp("signaldetect"),pdu);
+
+			sendState(false);
         }
 
         // This takes some processing, so we only do this if it's requested.

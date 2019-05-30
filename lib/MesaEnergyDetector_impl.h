@@ -57,6 +57,7 @@ namespace gr {
     	// Methods
     	float calcMinDutyCycle();
 		virtual int processData(int noutput_items,const gr_complex *in,gr_complex *out,pmt::pmt_t *pMetadata);
+		void sendState(bool state);
 
      public:
       MesaEnergyDetector_impl(int fftsize, float squelchThreshold, float minWidthHz, float maxWidthHz, float radioCenterFreq, float sampleRate, float holdUpSec,
