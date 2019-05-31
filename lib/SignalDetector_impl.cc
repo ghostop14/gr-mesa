@@ -320,8 +320,8 @@ namespace gr {
 			pmt::pmt_t meta = pmt::make_dict();
 
 			meta = pmt::dict_add(meta, pmt::mp("state"), pmt::mp(1));
-			meta = pmt::dict_add(meta, pmt::mp("decisionvalue"), pmt::mp(signalVector.size()));
-			meta = pmt::dict_add(meta, pmt::mp("numsignals"), pmt::mp(signalVector.size()));
+			meta = pmt::dict_add(meta, pmt::mp("decisionvalue"), pmt::mp((int)signalVector.size()));
+			meta = pmt::dict_add(meta, pmt::mp("numsignals"), pmt::mp((int)signalVector.size()));
 			meta = pmt::dict_add(meta, pmt::mp("radioFreq"), pmt::mp(d_centerFreq));
 			meta = pmt::dict_add(meta, pmt::mp("sampleRate"), pmt::mp(d_sampleRate));
 			meta = pmt::dict_add(meta, pmt::mp("strongestCenterFreq"), pmt::mp(maxCtrFreq));

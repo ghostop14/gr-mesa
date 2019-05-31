@@ -374,8 +374,8 @@ namespace gr {
 					  pmt::pmt_t meta = pmt::make_dict();
 
 					  // NOTE: freq matches the key looked for by the signal source block if needed.
-					  meta = pmt::dict_add(meta, pmt::mp("numsignals"), pmt::mp(signalVector.size()));
-					  meta = pmt::dict_add(meta, pmt::mp("decisionvalue"), pmt::mp(signalVector.size()));
+					  meta = pmt::dict_add(meta, pmt::mp("numsignals"), pmt::mp((int)signalVector.size()));
+					  meta = pmt::dict_add(meta, pmt::mp("decisionvalue"), pmt::mp((int)signalVector.size()));
 					  meta = pmt::dict_add(meta, pmt::mp("closestsignalnum"), pmt::mp(closestIndex+1));
 					  meta = pmt::dict_add(meta, pmt::mp("freq"), pmt::mp(d_currentFreqShiftDelta));
 					  meta = pmt::dict_add(meta, pmt::mp("freqoffset"), pmt::mp(d_currentFreqShiftDelta));
@@ -391,8 +391,8 @@ namespace gr {
 						  message_port_pub(pmt::mp("freq_info"),pdu);
 				  }
 				  else {
-					  *pMetadata = pmt::dict_add(*pMetadata, pmt::mp("numsignals"), pmt::mp(signalVector.size()));
-					  *pMetadata = pmt::dict_add(*pMetadata, pmt::mp("decisionvalue"), pmt::mp(signalVector.size()));
+					  *pMetadata = pmt::dict_add(*pMetadata, pmt::mp("numsignals"), pmt::mp((int)signalVector.size()));
+					  *pMetadata = pmt::dict_add(*pMetadata, pmt::mp("decisionvalue"), pmt::mp((int)signalVector.size()));
 					  *pMetadata = pmt::dict_add(*pMetadata, pmt::mp("closestsignalnum"), pmt::mp(closestIndex+1));
 					  *pMetadata = pmt::dict_add(*pMetadata, pmt::mp("widthHz"), pmt::mp(signalVector[closestIndex].widthHz));
 					  *pMetadata = pmt::dict_add(*pMetadata, pmt::mp("signalpower"), pmt::mp(signalVector[closestIndex].maxPower));
@@ -465,8 +465,8 @@ namespace gr {
   	    		          pmt::pmt_t meta = pmt::make_dict();
 
   	      		          // NOTE: freq matches the key looked for by the signal source block if needed.
-  	    				  meta = pmt::dict_add(meta, pmt::mp("numsignals"), pmt::mp(signalVector.size()));
-  	    				  meta = pmt::dict_add(meta, pmt::mp("decisionvalue"), pmt::mp(signalVector.size()));
+  	    				  meta = pmt::dict_add(meta, pmt::mp("numsignals"), pmt::mp((int)signalVector.size()));
+  	    				  meta = pmt::dict_add(meta, pmt::mp("decisionvalue"), pmt::mp((int)signalVector.size()));
   	    				  meta = pmt::dict_add(meta, pmt::mp("closestsignal"), pmt::mp(closestIndex+1));
   	      		          meta = pmt::dict_add(meta, pmt::mp("freq"), pmt::mp(d_currentFreqShiftDelta));
   	      		          meta = pmt::dict_add(meta, pmt::mp("freqoffset"), pmt::mp(d_currentFreqShiftDelta));
@@ -482,8 +482,8 @@ namespace gr {
   							  message_port_pub(pmt::mp("freq_info"),pdu);
   	      			  }
   	      			  else {
-  	      				  *pMetadata = pmt::dict_add(*pMetadata, pmt::mp("numsignals"), pmt::mp(signalVector.size()));
-  	      				  *pMetadata = pmt::dict_add(*pMetadata, pmt::mp("decisionvalue"), pmt::mp(signalVector.size()));
+  	      				  *pMetadata = pmt::dict_add(*pMetadata, pmt::mp("numsignals"), pmt::mp((int)signalVector.size()));
+  	      				  *pMetadata = pmt::dict_add(*pMetadata, pmt::mp("decisionvalue"), pmt::mp((int)signalVector.size()));
   	    				  *pMetadata = pmt::dict_add(*pMetadata, pmt::mp("closestsignal"), pmt::mp(closestIndex+1));
   						  *pMetadata = pmt::dict_add(*pMetadata, pmt::mp("widthHz"), pmt::mp(signalVector[closestIndex].widthHz));
   						  *pMetadata = pmt::dict_add(*pMetadata, pmt::mp("signalpower"), pmt::mp(signalVector[closestIndex].maxPower));
@@ -552,8 +552,8 @@ namespace gr {
             pmt::pmt_t meta = pmt::make_dict();
 
             meta = pmt::dict_add(meta, pmt::mp("state"), pmt::mp(1));
-			meta = pmt::dict_add(meta, pmt::mp("decisionvalue"), pmt::mp(signalVector.size()));
-			meta = pmt::dict_add(meta, pmt::mp("numsignals"), pmt::mp(signalVector.size()));
+			meta = pmt::dict_add(meta, pmt::mp("decisionvalue"), pmt::mp((int)signalVector.size()));
+			meta = pmt::dict_add(meta, pmt::mp("numsignals"), pmt::mp((int)signalVector.size()));
 			meta = pmt::dict_add(meta, pmt::mp("closestsignal"), pmt::mp(closestIndex+1));
 
             pmt::pmt_t pdu = pmt::cons( meta, pmt::PMT_NIL );
@@ -567,7 +567,7 @@ namespace gr {
             pmt::pmt_t meta = pmt::make_dict();
             meta = pmt::dict_add(meta, pmt::mp("state"), pmt::mp(0));
 			meta = pmt::dict_add(meta, pmt::mp("decisionvalue"), pmt::mp(0));
-			meta = pmt::dict_add(meta, pmt::mp("numsignals"), pmt::mp(signalVector.size()));
+			meta = pmt::dict_add(meta, pmt::mp("numsignals"), pmt::mp((int)signalVector.size()));
 
             pmt::pmt_t pdu = pmt::cons( meta, pmt::PMT_NIL );
 			if (!testMode)
