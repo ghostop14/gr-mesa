@@ -61,6 +61,8 @@ namespace gr {
 		virtual int processData(int noutput_items,const gr_complex *in);
 		virtual void sendState(bool state);
 
+		virtual float calcAverage();
+
      public:
       MaxPower_impl(float sampleRate, int fft_size, float squelchThreshold, float framesToAvg, bool produceOut, float stateThreshold, float holdUpSec);
       ~MaxPower_impl();

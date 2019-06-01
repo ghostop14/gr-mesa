@@ -65,7 +65,7 @@ namespace gr {
     	// float fBufferCapacity = secondsToAvg * d_sampleRate / (d_framesToAvg * d_fftSize);
 
     	// iBufferCapacity = (int)fBufferCapacity;
-    	iBufferCapacity = 3;
+    	iBufferCapacity = 5;
 
     	if (iBufferCapacity == 0) {
     		iBufferCapacity = 1;
@@ -119,6 +119,42 @@ namespace gr {
 		int retVal = processData(noutput_items,cc_samples);
     }
 
+    float MaxPower_impl::calcAverage() {
+    	// Average will throw away the highest and lowest, and take the average of the remaining values.
+    	float min = (*maxBuffer)[0];
+    	float max = min;
+    	float curVal;
+        float maxTotal = 0.0;
+
+        for (int i=0;i<maxBuffer->size();i++) {
+        	curVal = (*maxBuffer)[i];
+        	maxTotal += curVal;
+
+      	  if (curVal < min) {
+      		  min = curVal;
+      	  }
+      	  else {
+      		  if (curVal > max) {
+      			  max = curVal;
+      		  }
+      	  }
+        }
+
+        float maxAvg;
+
+        if (maxBuffer->size() == iBufferCapacity) {
+        	// Take out min and max values
+        	maxTotal = maxTotal - min - max;
+            maxAvg = maxTotal / (iBufferCapacity - 2);
+        }
+        else {
+        	// We haven't seen enough frames yet to fill the buffer.  We're still queueing
+            maxAvg = maxTotal / maxBuffer->size();
+        }
+
+        return maxAvg;
+    }
+
     int MaxPower_impl::processData(int noutput_items,const gr_complex *in) {
       	gr::thread::scoped_lock guard(d_mutex);
 
@@ -137,11 +173,7 @@ namespace gr {
           // Note: circular buffer size() returns the number of items in the buffer.
           // If the number of items < capacity, the number of items in the buffer are returned,
           // so the following loop should always be good.
-          for (int i=0;i<maxBuffer->size();i++) {
-        	  maxTotal += (*maxBuffer)[i];
-          }
-
-          float maxAvg = maxTotal / maxBuffer->size();
+          float maxAvg = calcAverage();
 
           // Send maxpower message
     	  pmt::pmt_t meta = pmt::make_dict();
