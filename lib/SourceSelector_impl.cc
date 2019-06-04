@@ -140,10 +140,10 @@ namespace gr {
 		pmt::pmt_t meta = pmt::car(msg);
 
 		// Take a look at max power to see what we want to do.
-		float maxpower = pmt::to_float(pmt::dict_ref(meta, pmt::mp("decisionvalue"), pmt::mp(-999.0)));
+		float maxVal = pmt::to_float(pmt::dict_ref(meta, pmt::mp("decisionvalue"), pmt::mp(-999.0)));
 
 		// Set the currently sent power as the power for the specified port
-		maxPower[port-1] = maxpower;
+		maxPower[port-1] = maxVal;
 
 		// Get the port with the current max power
 		int iMaxPowerPort = maxPowerIndex() + 1;
@@ -153,53 +153,44 @@ namespace gr {
 			queueData(msg);
 		}
 		else {
-			// Need to see what didn't match.  If we're not max power, we don't care and we can just drop through
+			// Need to see what didn't match.  If we're not max, we don't care and we can just drop through
 			// The missing "else" to the if statement below.
 
-			// However there were problems when the power between the current channel was too close to maxpower.
-			// it was causing bouncing.  Trying to eliminate it by requiring a small percentage difference
-			// otherwise we just ignore it.
-			float powerDiff = fabs(maxPower[port-1] - maxPower[d_currentInput-1]);
-			// float pctDiff = fabs(powerDiff / maxPower[d_currentInput-1]) * 100.0; // Convert to percent of maxPower
+			if (iMaxPowerPort == port) {
+				// We're here because the max power port is not d_currentInput, it's this port.  Which means the max power port has changed.
 
-			// if (pctDiff > 3.0) {
-			if (powerDiff > 2.0) {  // Need more than a small dB change to justify switching
-				if (iMaxPowerPort == port) {
-					// We're here because the max power port is not d_currentInput, it's this port.  Which means the max power port has changed.
+				// Need to check our hold-down timers
+				if (!d_startInitialized) {
+					// First time the port has changed.  Go ahead and move it as we may just be initializing.
+					d_startInitialized = true;
+					d_currentInput = port;
+					lastShifted = std::chrono::steady_clock::now(); // Initialize the shifted timer.
 
-					// Need to check our hold-down timers
-					if (!d_startInitialized) {
-						// First time the port has changed.  Go ahead and move it as we may just be initializing.
-						d_startInitialized = true;
+					// We haven't initialized prior to this, so this is locking on to the first max power.  It may
+					// Hop a bit as the engine starts here.
+					queueData(msg);
+					sendNewPortMsg(port);
+				}
+				else {
+					float powerDiff = fabs(maxPower[port-1] - maxPower[d_currentInput-1]);
+					float pctDiff = fabs(powerDiff / maxPower[d_currentInput-1]) * 100.0; // Convert to percent of maxPower
+
+					// we're initialized so let's see if we're within our holddown period.
+					std::chrono::time_point<std::chrono::steady_clock> curTimestamp = std::chrono::steady_clock::now();
+					std::chrono::duration<double> elapsed_seconds = curTimestamp-lastShifted;
+					if (elapsed_seconds.count() > (double)d_holdTime) {
 						d_currentInput = port;
-						lastShifted = std::chrono::steady_clock::now(); // Initialize the shifted timer.
-
-						// We haven't initialized prior to this, so this is locking on to the first max power.  It may
-						// Hop a bit as the engine starts here.
+						lastShifted = curTimestamp;  // Reset the shifted timer.
 						queueData(msg);
 						sendNewPortMsg(port);
-					}
-					else {
-						float powerDiff = fabs(maxPower[port-1] - maxPower[d_currentInput-1]);
-						float pctDiff = fabs(powerDiff / maxPower[d_currentInput-1]) * 100.0; // Convert to percent of maxPower
+					} // elapsed_seconds
+					/*
+					 * The else to this that drops through is that we're not the max port and we're within our hold-down
+					 * timer, so we're not allowed to shift.  Which means we have to just drop the data.  So there's no queueing.
+					 */
+				} // else initialized
 
-						// we're initialized so let's see if we're within our holddown period.
-						std::chrono::time_point<std::chrono::steady_clock> curTimestamp = std::chrono::steady_clock::now();
-						std::chrono::duration<double> elapsed_seconds = curTimestamp-lastShifted;
-						if (elapsed_seconds.count() > (double)d_holdTime) {
-							d_currentInput = port;
-							lastShifted = curTimestamp;  // Reset the shifted timer.
-							queueData(msg);
-							sendNewPortMsg(port);
-						} // elapsed_seconds
-						/*
-						 * The else to this that drops through is that we're not the max port and we're within our hold-down
-						 * timer, so we're not allowed to shift.  Which means we have to just drop the data.  So there's no queueing.
-						 */
-					} // else initialized
-
-				} // iMaxPower == port
-			}
+			} // iMaxPower == port
 		}
 
     }
