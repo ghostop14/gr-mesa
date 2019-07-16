@@ -17,7 +17,6 @@
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-
 install(FILES
     mesa_SignalDetector.xml
     mesa_AutoDopplerCorrect.xml
@@ -26,5 +25,6 @@ install(FILES
     mesa_LongTermIntegrator.xml
     mesa_ioselector.xml
     mesa_AutoCorrelator.xml
-    mesa_AutoCorrelatorSink.xml DESTINATION share/gnuradio/grc/blocks
+    mesa_AutoCorrelatorSink.xml
+    mesa_Normalize.xml DESTINATION share/gnuradio/grc/blocks
 )

@@ -5,7 +5,7 @@
   <category>[mesa]</category>
   <import>import mesa</import>
   <make>#set $win = 'self._%s_win'%$id 
-  mesa.AutoCorrelatorSink($sampRate, $fac_size, $fac_decimation, $title, $autoScale, $grid, $yMin, $yMax)
+  mesa.AutoCorrelatorSink($sampRate, $fac_size, $fac_decimation, $title, $autoScale, $grid, $yMin, $yMax, $useDB)
 self._$(id)_win = self.$(id).getWidget()
 $(gui_hint() % $win)
 </make>
@@ -30,6 +30,20 @@ $(gui_hint() % $win)
 		<type>int</type>
 	</param>
 
+	<param>
+		<name>Output</name>
+		<key>useDB</key>
+		<type>enum</type>
+		<option>
+			<name>Normalized</name>
+			<key>False</key>
+		</option>
+		<option>
+			<name>dB</name>
+			<key>True</key>
+		</option>
+	</param>
+	
 	<param>
 		<name>Title</name>
 		<key>title</key>
@@ -56,25 +70,25 @@ $(gui_hint() % $win)
 		<key>autoScale</key>
 		<type>enum</type>
 		<option>
-			<name>Yes</name>
-			<key>True</key>
-		</option>
-		<option>
 			<name>No</name>
 			<key>False</key>
+		</option>
+		<option>
+			<name>Yes</name>
+			<key>True</key>
 		</option>
 	</param>
 	<param>
 		<name>Y Min</name>
 		<key>yMin</key>
-		<value>-50</value>
+		<value>0</value>
 		<type>float</type>
 	</param>
 
 	<param>
 		<name>Y Max</name>
 		<key>yMax</key>
-		<value>20</value>
+		<value>1</value>
 		<type>float</type>
 	</param>
   <param>

@@ -22,6 +22,7 @@
 from gnuradio import gr
 from gnuradio import blocks
 from mesa import AutoCorrelator
+from mesa import Normalize
 from gnuradio import qtgui
 # SIP import lets us wrap our control as a pyQt widget
 import sip
@@ -31,7 +32,7 @@ class AutoCorrelatorSink(gr.hier_block2):
     """
     docstring for block AutoCorrelatorSink
     """
-    def __init__(self, sample_rate, fac_size, fac_decimation, title,  autoScale, grid, yMin, yMax):
+    def __init__(self, sample_rate, fac_size, fac_decimation, title,  autoScale, grid, yMin, yMax,  useDB):
         gr.hier_block2.__init__(self,
             "AutoCorrelatorSink",
             gr.io_signature(1, 1, gr.sizeof_gr_complex),  # Input signature
@@ -41,7 +42,7 @@ class AutoCorrelatorSink(gr.hier_block2):
         self.fac_decimation = fac_decimation
         self.sample_rate = sample_rate
         
-        autoCorr = AutoCorrelator(sample_rate, fac_size, fac_decimation)
+        autoCorr = AutoCorrelator(sample_rate, fac_size, fac_decimation,  useDB)
         vecToStream = blocks.vector_to_stream(gr.sizeof_float, self.fac_size)
 
         self.timeSink = qtgui.time_sink_f(self.fac_size/2, sample_rate, title, 1)
@@ -50,8 +51,12 @@ class AutoCorrelatorSink(gr.hier_block2):
         self.timeSink.enable_autoscale(autoScale)
         self.timeSink.disable_legend()
         self.timeSink.set_update_time(0.1)
-        
-        self.connect(self, autoCorr,  vecToStream,  self.timeSink)
+
+        if useDB:
+            self.connect(self, autoCorr,  vecToStream,  self.timeSink)
+        else:
+            norm = Normalize.Normalize(self.fac_size)
+            self.connect(self, autoCorr,  norm,  vecToStream,  self.timeSink)
 
         #pyQt  = self.timeSink.pyqwidget()
         #self.pyWin = sip.wrapinstance(pyQt, QtGui.QWidget)

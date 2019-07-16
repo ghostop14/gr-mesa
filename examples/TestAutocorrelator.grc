@@ -428,7 +428,7 @@
     <key>mesa_AutoCorrelatorSink</key>
     <param>
       <key>autoScale</key>
-      <value>True</value>
+      <value>False</value>
     </param>
     <param>
       <key>alias</key>
@@ -456,7 +456,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(776, 572)</value>
+      <value>(832, 580)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -468,7 +468,11 @@
     </param>
     <param>
       <key>id</key>
-      <value>mesa_AutoCorrelatorSink_0</value>
+      <value>mesa_AutoCorrelatorSink_1</value>
+    </param>
+    <param>
+      <key>useDB</key>
+      <value>False</value>
     </param>
     <param>
       <key>sampRate</key>
@@ -484,11 +488,11 @@
     </param>
     <param>
       <key>yMax</key>
-      <value>20</value>
+      <value>1</value>
     </param>
     <param>
       <key>yMin</key>
-      <value>-50</value>
+      <value>0</value>
     </param>
   </block>
   <block>
@@ -519,7 +523,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(552, 428)</value>
+      <value>(408, 424)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -538,8 +542,55 @@
       <value>0</value>
     </param>
     <param>
+      <key>useDB</key>
+      <value>False</value>
+    </param>
+    <param>
       <key>sampRate</key>
       <value>samp_rate</value>
+    </param>
+  </block>
+  <block>
+    <key>mesa_Normalize</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(592, 444)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>mesa_Normalize_0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>vecsize</key>
+      <value>fac_size</value>
     </param>
   </block>
   <block>
@@ -1078,7 +1129,7 @@
   </connection>
   <connection>
     <source_block_id>blocks_throttle_0</source_block_id>
-    <sink_block_id>mesa_AutoCorrelatorSink_0</sink_block_id>
+    <sink_block_id>mesa_AutoCorrelatorSink_1</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -1102,6 +1153,12 @@
   </connection>
   <connection>
     <source_block_id>mesa_AutoCorrelator_0</source_block_id>
+    <sink_block_id>mesa_Normalize_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>mesa_Normalize_0</source_block_id>
     <sink_block_id>blocks_vector_to_stream_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>

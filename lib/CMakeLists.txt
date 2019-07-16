@@ -28,7 +28,6 @@ include(GrPlatform) #define LIB_SUFFIX
 
 include_directories(${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIRS})
-
 list(APPEND mesa_sources
 	signals_mesa.cc
     SignalDetector_impl.cc
@@ -37,7 +36,7 @@ list(APPEND mesa_sources
     SourceSelector_impl.cc
     LongTermIntegrator_impl.cc
     ioselector_impl.cc
-)
+    )
 
 set(mesa_sources "${mesa_sources}" PARENT_SCOPE)
 if(NOT mesa_sources)

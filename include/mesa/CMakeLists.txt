@@ -28,5 +28,6 @@ install(FILES
     MaxPower.h
     SourceSelector.h
     LongTermIntegrator.h
-    ioselector.h DESTINATION include/mesa
+    ioselector.h
+    DESTINATION include/mesa
 )

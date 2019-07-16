@@ -29,3 +29,4 @@ GR_SWIG_BLOCK_MAGIC2(mesa, SourceSelector);
 GR_SWIG_BLOCK_MAGIC2(mesa, LongTermIntegrator);
 %include "mesa/ioselector.h"
 GR_SWIG_BLOCK_MAGIC2(mesa, ioselector);
+

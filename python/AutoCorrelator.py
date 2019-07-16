@@ -27,7 +27,7 @@ class AutoCorrelator(gr.hier_block2):
     """
     docstring for block AutoCorrelator
     """
-    def __init__(self, sample_rate,  fac_size,fac_decimation):
+    def __init__(self, sample_rate,  fac_size,fac_decimation,  useDB):
         gr.hier_block2.__init__(self,"AutoCorrelator",
             gr.io_signature(1, 1, gr.sizeof_gr_complex),  # Input signature
             gr.io_signature(1, 1, gr.sizeof_float*fac_size)) # Output signature
@@ -55,4 +55,7 @@ class AutoCorrelator(gr.hier_block2):
         k =  -20*math.log10(self.fac_size)
         log = blocks.nlog10_ff_make(n, self.fac_size, k )
 
-        self.connect(self, streamToVec, self.one_in_n, fac, complex2Mag,  fac_fac, fac_c2mag, self.avg, log,  self)
+        if useDB:
+            self.connect(self, streamToVec, self.one_in_n, fac, complex2Mag,  fac_fac, fac_c2mag, self.avg, log,  self)
+        else:
+            self.connect(self, streamToVec, self.one_in_n, fac, complex2Mag,  fac_fac, fac_c2mag, self.avg, self)

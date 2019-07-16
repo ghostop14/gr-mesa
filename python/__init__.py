@@ -33,4 +33,5 @@ except ImportError:
 # import any pure python here
 from AutoCorrelator import AutoCorrelator
 from AutoCorrelatorSink import AutoCorrelatorSink
+from Normalize import Normalize
 #

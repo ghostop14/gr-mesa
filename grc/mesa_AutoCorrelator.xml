@@ -4,7 +4,7 @@
   <key>mesa_AutoCorrelator</key>
   <category>[mesa]</category>
   <import>import mesa</import>
-  <make>mesa.AutoCorrelator($sampRate, $fac_size, $fac_decimation)</make>
+  <make>mesa.AutoCorrelator($sampRate, $fac_size, $fac_decimation, $useDB)</make>
 	<param>
 		<name>Sample Rate</name>
 		<key>sampRate</key>
@@ -26,6 +26,20 @@
 		<type>int</type>
 	</param>
 
+	<param>
+		<name>Output</name>
+		<key>useDB</key>
+		<type>enum</type>
+		<option>
+			<name>Normalized</name>
+			<key>False</key>
+		</option>
+		<option>
+			<name>dB</name>
+			<key>True</key>
+		</option>
+	</param>
+	
   <sink>
     <name>in</name>
     <type>complex</type>

@@ -33,7 +33,8 @@ GR_PYTHON_INSTALL(
     FILES
     __init__.py
     AutoCorrelator.py
-    AutoCorrelatorSink.py DESTINATION ${GR_PYTHON_DIR}/mesa
+    AutoCorrelatorSink.py
+    Normalize.py DESTINATION ${GR_PYTHON_DIR}/mesa
 )
 
 ########################################################################
