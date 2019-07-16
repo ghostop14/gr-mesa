@@ -31,4 +31,6 @@ except ImportError:
 	pass
 
 # import any pure python here
+from AutoCorrelator import AutoCorrelator
+from AutoCorrelatorSink import AutoCorrelatorSink
 #

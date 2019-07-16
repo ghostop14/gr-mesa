@@ -24,5 +24,7 @@ install(FILES
     mesa_MaxPower.xml
     mesa_SourceSelector.xml
     mesa_LongTermIntegrator.xml
-    mesa_ioselector.xml DESTINATION share/gnuradio/grc/blocks
+    mesa_ioselector.xml
+    mesa_AutoCorrelator.xml
+    mesa_AutoCorrelatorSink.xml DESTINATION share/gnuradio/grc/blocks
 )

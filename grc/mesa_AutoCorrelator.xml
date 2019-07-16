@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<block>
+  <name>Auto-Correlator</name>
+  <key>mesa_AutoCorrelator</key>
+  <category>[mesa]</category>
+  <import>import mesa</import>
+  <make>mesa.AutoCorrelator($sampRate, $fac_size, $fac_decimation)</make>
+	<param>
+		<name>Sample Rate</name>
+		<key>sampRate</key>
+		<value>samp_rate</value>
+		<type>float</type>
+	</param>
+
+	<param>
+		<name>FAC Size</name>
+		<key>fac_size</key>
+		<value>512</value>
+		<type>int</type>
+	</param>
+
+	<param>
+		<name>FAC Decimation</name>
+		<key>fac_decimation</key>
+		<value>10</value>
+		<type>int</type>
+	</param>
+
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>float</type>
+    <vlen>$fac_size</vlen>
+  </source>
+  <doc>
+  	This block is the numerical calculation of the fast auto-correlation block previously available in gr-baz.  It uses the Wiener Khinchin theorem that the FFT of a signal's power spectrum is its auto-correlation function.  FAC Size controls the FFT size and therefore the length of time (samp_rate/fac_size) the auto-correlation runs over.  While a separate block provides an all-in-one sink, this can be fed into a vector-to-stream then into a time sink block for display. 
+  </doc>
+</block>

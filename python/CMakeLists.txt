@@ -32,7 +32,8 @@ endif()
 GR_PYTHON_INSTALL(
     FILES
     __init__.py
-    DESTINATION ${GR_PYTHON_DIR}/mesa
+    AutoCorrelator.py
+    AutoCorrelatorSink.py DESTINATION ${GR_PYTHON_DIR}/mesa
 )
 
 ########################################################################
