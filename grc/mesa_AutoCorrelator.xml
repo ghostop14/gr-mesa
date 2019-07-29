@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <block>
-  <name>Auto-Correlator</name>
+  <name>Fast Auto-Correlator</name>
   <key>mesa_AutoCorrelator</key>
   <category>[mesa]</category>
   <import>import mesa</import>
