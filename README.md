@@ -11,6 +11,8 @@ gr-mesa is a project to incorporate some enhanced fundamental signal identificat
 5. A QT GUI version of the Fast Auto-correlator (example in the examples directory).  This conversion makes this block GR 3.8-Ready as soon as this OOT block is converted to 3.8 (hopefully after GRCon 2019).
 6. A fast auto-correlator block that provides correlated vectors as output (example in the examples directory).
 7. Normalize - Take an input vector and normalize all values to 1.0.
+8. Phase Shift - Shift an incoming signal by shift_radians.  Shift can be controlled via variable or incoming float message
+9. Average to Message - Take the average of an incoming float vector and output the scalar average as a message
 
 ## Building
 gr-mesa has no core dependencies.  However if you will be using the state out ports, it is highly recommended to install gr-filerepeater as additional state blocks are included there.

@@ -14,6 +14,8 @@
 #include "mesa/SourceSelector.h"
 #include "mesa/LongTermIntegrator.h"
 #include "mesa/ioselector.h"
+#include "mesa/PhaseShift.h"
+#include "mesa/AvgToMsg.h"
 %}
 
 
@@ -30,3 +32,7 @@ GR_SWIG_BLOCK_MAGIC2(mesa, LongTermIntegrator);
 %include "mesa/ioselector.h"
 GR_SWIG_BLOCK_MAGIC2(mesa, ioselector);
 
+%include "mesa/PhaseShift.h"
+GR_SWIG_BLOCK_MAGIC2(mesa, PhaseShift);
+%include "mesa/AvgToMsg.h"
+GR_SWIG_BLOCK_MAGIC2(mesa, AvgToMsg);

@@ -26,5 +26,7 @@ install(FILES
     mesa_ioselector.xml
     mesa_AutoCorrelator.xml
     mesa_AutoCorrelatorSink.xml
-    mesa_Normalize.xml DESTINATION share/gnuradio/grc/blocks
+    mesa_Normalize.xml
+    mesa_PhaseShift.xml
+    mesa_AvgToMsg.xml DESTINATION share/gnuradio/grc/blocks
 )

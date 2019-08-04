@@ -29,5 +29,6 @@ install(FILES
     SourceSelector.h
     LongTermIntegrator.h
     ioselector.h
-    DESTINATION include/mesa
+    PhaseShift.h
+    AvgToMsg.h DESTINATION include/mesa
 )

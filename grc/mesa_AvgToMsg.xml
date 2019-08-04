@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<block>
+  <name>Average To Msg</name>
+  <key>mesa_AvgToMsg</key>
+  <category>[mesa]</category>
+  <import>import mesa</import>
+  <make>mesa.AvgToMsg($veclen)</make>
+	<param>
+		<name>Vector Length</name>
+		<key>veclen</key>
+		<value>1024</value>
+		<type>int</type>
+	</param>
+
+  <!-- Make one 'sink' node per input. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <sink>
+    <name>in</name>
+    <type>float</type>
+    <vlen>$veclen</vlen>
+  </sink>
+
+  <source>
+    <name>avg</name>
+    <type>message</type>
+  </source>
+  <doc>
+  This block will output the single scalar float average of the input floats as a message.
+  </doc>
+</block>
