@@ -71,7 +71,10 @@ namespace gr {
 
 		while (!stopThread) {
 			std::chrono::time_point<std::chrono::steady_clock> curTimestamp = std::chrono::steady_clock::now();
-			std::chrono::duration<double> elapsed_seconds = curTimestamp - startTime;
+			std::chrono::duration<double> elapsed_seconds;
+
+			elapsed_seconds = curTimestamp - startTime;
+
 			float sec = elapsed_seconds.count();
 			stringstream stream;
 			string timeStr;
@@ -98,6 +101,19 @@ namespace gr {
 		}
 
 		threadRunning = false;
+	}
+
+	void LongTermIntegrator_impl::reset(bool bReset) {
+		if (bReset) {
+			gr::thread::scoped_lock guard(d_mutex);
+
+			// Zero out all aggregation buckets
+			for (int i=0;i<d_fftsize;i++)
+				aggBuffer[i] = 0.0;
+
+			// Reset integration time
+			startTime = std::chrono::steady_clock::now();
+		}
 	}
 
     bool LongTermIntegrator_impl::stop() {
@@ -141,6 +157,8 @@ namespace gr {
         uint32_t maxIndex;
 
 
+		gr::thread::scoped_lock guard(d_mutex);
+
         // Vectors have to be done individually to map into aggBuffer;
         for (int curVector=0;curVector<noutput_items;curVector++) {
         	// aggBuffer[i] = aggBuffer[i] + in[curVector*d_fftsize + i];
@@ -169,6 +187,21 @@ namespace gr {
       return noutput_items;
     }
 
+    void
+	LongTermIntegrator_impl::setup_rpc()
+    {
+  #ifdef GR_CTRLPORT
+      // Setters
+      add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_set<LongTermIntegrator_impl, bool>(
+  	  alias(), "reset",
+  	  &LongTermIntegrator_impl::reset,
+      pmt::mp(false), pmt::mp(true), pmt::mp(false),
+      "bool", "reset", RPC_PRIVLVL_MIN,
+      DISPTIME | DISPOPTSTRIP)));
+
+  #endif /* GR_CTRLPORT */
+    }
   } /* namespace mesa */
 } /* namespace gr */
 

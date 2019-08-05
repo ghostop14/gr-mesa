@@ -5,6 +5,7 @@
   <category>[mesa]</category>
   <import>import mesa</import>
   <make>mesa.LongTermIntegrator($vlength,$normalize)</make>
+	<callback>reset($reset)</callback>
 	<param>
 		<name>Vector Length</name>
 		<key>vlength</key>
@@ -23,6 +24,12 @@
 			<name>No</name>
 			<key>False</key>
 		</option>
+	</param>
+	<param>
+		<name>Reset</name>
+		<key>reset</key>
+		<value>False</value>
+		<type>bool</type>
 	</param>
   <sink>
     <name>in</name>

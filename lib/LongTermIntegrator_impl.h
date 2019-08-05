@@ -39,6 +39,7 @@ namespace gr {
     	int d_fftsize;
     	bool d_normalize;
     	float *aggBuffer;
+        boost::mutex d_mutex;
 
    	 	std::chrono::time_point<std::chrono::steady_clock> startTime;
 
@@ -51,6 +52,9 @@ namespace gr {
      public:
       LongTermIntegrator_impl(int fftsize, bool normalize);
       ~LongTermIntegrator_impl();
+
+      virtual void reset(bool bReset);
+      void setup_rpc();
 
       bool stop();
 

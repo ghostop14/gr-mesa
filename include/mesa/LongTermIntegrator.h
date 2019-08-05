@@ -47,6 +47,8 @@ namespace gr {
        * creating new instances.
        */
       static sptr make(int fftsize, bool normalize);
+      virtual void reset(bool bReset) = 0;
+
     };
 
   } // namespace mesa
