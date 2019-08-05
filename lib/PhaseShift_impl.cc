@@ -106,7 +106,7 @@ namespace gr {
     add_rpc_variable(
       rpcbasic_sptr(new rpcbasic_register_get<PhaseShift_impl, float>(
 	  alias(), "shift",
-	  &AdvFileSink_impl::getShift,
+	  &PhaseShift_impl::getShift,
     pmt::mp(0.0), pmt::mp(4.0), pmt::mp(0.0),
     "rad", "shift", RPC_PRIVLVL_MIN,
     DISPTIME | DISPOPTSTRIP)));
@@ -115,7 +115,7 @@ namespace gr {
     add_rpc_variable(
       rpcbasic_sptr(new rpcbasic_register_set<PhaseShift_impl, float>(
 	  alias(), "shift",
-	  &AdvFileSink_impl::setShift,
+	  &PhaseShift_impl::setShift,
     pmt::mp(0.0), pmt::mp(4.0), pmt::mp(0.0),
     "rad", "shift", RPC_PRIVLVL_MIN,
     DISPTIME | DISPOPTSTRIP)));
