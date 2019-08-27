@@ -30,10 +30,16 @@ namespace gr {
     {
      private:
         int d_veclen;
+        bool b_hold;
+        bool b_useStdDev;
 
      public:
       AvgToMsg_impl(int veclen);
       ~AvgToMsg_impl();
+
+      void setup_rpc();
+
+      virtual void setHold(bool newValue);
 
       // Where all the action really happens
       int work(int noutput_items,

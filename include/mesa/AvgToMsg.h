@@ -47,6 +47,8 @@ namespace gr {
        * creating new instances.
        */
       static sptr make(int veclen);
+
+      virtual void setHold(bool newValue) = 0;
     };
 
   } // namespace mesa

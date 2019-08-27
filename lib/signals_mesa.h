@@ -59,12 +59,12 @@ namespace MesaSignals {
 
 	    // Execute computes the FFT and if a windowing function has been set for the class, it is applied appropriately
 	    // before executing the FFT
-	    virtual void execute();
+	    virtual void execute(bool shift=false);
 
 	    // This execute applies the specified taps rather than the class taps.
 	    // NOTE: the length of pTaps must be fftSize.
 	    // Passing NULL will disable windowing for this run.
-	    inline void execute(float *pTaps);
+	    inline void execute(float *pTaps, bool shift=false);
 
 	    // So PSD computes power in dBm which is basically the RSSI.
 	    // PowerSpectralDensity: Call Execute first, then call this function

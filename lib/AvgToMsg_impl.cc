@@ -46,6 +46,9 @@ namespace gr {
             gr::io_signature::make(0, 0, 0))
   {
   	d_veclen = veclen;
+  	b_hold = false;
+  	b_useStdDev = true;
+
       message_port_register_out(pmt::mp("avg"));
   }
 
@@ -65,25 +68,67 @@ namespace gr {
 
     float sum=0.0;
     int vecstart;
+    long nitems=d_veclen*noutput_items;
 
-    /*
-    for (int nvecs=0;nvecs<noutput_items;nvecs++) {
-  	  vecstart = nvecs*d_veclen;
-        for (int i=0;i<d_veclen;i++) {
-      	sum += in[vecstart + i];
-        }
-    }
-	*/
-    volk_32f_accumulator_s32f(&sum,in,(d_veclen*noutput_items));
+    volk_32f_accumulator_s32f(&sum,in,nitems);
 
     float avg = sum / (d_veclen*noutput_items);
 
-    message_port_pub(pmt::mp("avg"),pmt::from_float(avg));
+    /*
+    if (b_useStdDev) {
+    	// include in result only if value is within 2 std_dev (98% of all samples should fall here)
+    	float standardDeviation = 0.0;
+        for(long i = 0; i < nitems; ++i) {
+            standardDeviation += pow(in[i] - avg, 2);
+        }
+        standardDeviation = sqrt(standardDeviation / (float)nitems);
+
+        float TwoStdDev = 2.0*standardDeviation;
+
+    	long itemsUsed = 0;
+    	float newSum = 0.0;
+
+        for(long i = 0; i < nitems; ++i) {
+        	if (fabs(in[i] - avg) <= TwoStdDev) {
+        		itemsUsed++;
+        		newSum += in[i];
+        	}
+        }
+
+        if (itemsUsed > 0) {
+        	avg = newSum / (float)itemsUsed;
+        }
+
+    }
+	*/
+
+    if (!b_hold)
+    	message_port_pub(pmt::mp("avg"),pmt::from_float(avg));
 
     // Tell runtime system how many output items we produced.
     return noutput_items;
   }
 
+  void
+    AvgToMsg_impl::setHold(bool newValue) {
+	  b_hold = newValue;
+  }
+
+  void
+  AvgToMsg_impl::setup_rpc()
+  {
+#ifdef GR_CTRLPORT
+    // Setters
+    add_rpc_variable(
+      rpcbasic_sptr(new rpcbasic_register_set<AvgToMsg_impl, bool>(
+	  alias(), "hold",
+	  &AvgToMsg_impl::setHold,
+    pmt::mp(false), pmt::mp(true), pmt::mp(false),
+    "bool", "hold", RPC_PRIVLVL_MIN,
+    DISPTIME | DISPOPTSTRIP)));
+
+#endif /* GR_CTRLPORT */
+  }
   } /* namespace mesa */
 } /* namespace gr */
 

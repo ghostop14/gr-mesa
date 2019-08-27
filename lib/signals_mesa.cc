@@ -196,7 +196,7 @@ void FFT::exportWisdom() {
 	*/
 }
 
-inline void FFT::execute() {
+inline void FFT::execute(bool shift) {
 	boost::mutex::scoped_lock scoped_lock(d_mutex);
 
 	if (hasTaps) {
@@ -205,9 +205,19 @@ inline void FFT::execute() {
 	}
 
     fftwf_execute((fftwf_plan) fftPlan);
+
+    if (shift) {
+        // DC center is at out[0] so need to swap halves first.
+        // Move top half to tmp buffer
+        memcpy(tmpBuff,&outputBuffer[halfFFTSize],halfFFTSizeBytes);
+        // move lower half up
+    	memcpy(&outputBuffer[halfFFTSize],&outputBuffer[0],halfFFTSizeBytes);
+    	// put top half back in the lower half
+    	memcpy(&outputBuffer[0],&tmpBuff[0],halfFFTSizeBytes);
+    }
 }
 
-inline void FFT::execute(float *pTaps) {
+inline void FFT::execute(float *pTaps, bool shift) {
 	boost::mutex::scoped_lock scoped_lock(d_mutex);
 
 	if (pTaps) {
@@ -216,6 +226,16 @@ inline void FFT::execute(float *pTaps) {
 	}
 
     fftwf_execute((fftwf_plan) fftPlan);
+
+    if (shift) {
+        // DC center is at out[0] so need to swap halves first.
+        // Move top half to tmp buffer
+        memcpy(tmpBuff,&outputBuffer[halfFFTSize],halfFFTSizeBytes);
+        // move lower half up
+    	memcpy(&outputBuffer[halfFFTSize],&outputBuffer[0],halfFFTSizeBytes);
+    	// put top half back in the lower half
+    	memcpy(&outputBuffer[0],&tmpBuff[0],halfFFTSizeBytes);
+    }
 }
 
 inline void FFT::PowerSpectralDensity(float *psdBuffer, float squelchThreshold, float onSquelchSetRSSI) {

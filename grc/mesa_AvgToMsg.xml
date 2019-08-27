@@ -4,7 +4,9 @@
   <key>mesa_AvgToMsg</key>
   <category>[mesa]</category>
   <import>import mesa</import>
-  <make>mesa.AvgToMsg($veclen)</make>
+  <make>mesa.AvgToMsg($veclen)
+self.$(id).setHold($hold)</make>
+  <callback>setHold($hold)</callback>
 	<param>
 		<name>Vector Length</name>
 		<key>veclen</key>
@@ -12,6 +14,13 @@
 		<type>int</type>
 	</param>
 
+	<param>
+		<name>Lock</name>
+		<key>hold</key>
+		<value>False</value>
+		<type>bool</type>
+	</param>
+	
   <!-- Make one 'sink' node per input. Sub-nodes:
        * name (an identifier for the GUI)
        * type
