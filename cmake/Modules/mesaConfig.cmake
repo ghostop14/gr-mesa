@@ -22,9 +22,10 @@ FIND_LIBRARY(
           /usr/local/lib64
           /usr/lib
           /usr/lib64
-)
+          )
+
+include("${CMAKE_CURRENT_LIST_DIR}/mesaTarget.cmake")
 
 INCLUDE(FindPackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(MESA DEFAULT_MSG MESA_LIBRARIES MESA_INCLUDE_DIRS)
 MARK_AS_ADVANCED(MESA_LIBRARIES MESA_INCLUDE_DIRS)
-

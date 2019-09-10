@@ -26,7 +26,8 @@ from mesa import Normalize
 from gnuradio import qtgui
 # SIP import lets us wrap our control as a pyQt widget
 import sip
-from PyQt4 import QtGui
+from PyQt5 import QtGui
+from PyQt5.QtWidgets import QWidget
 
 class AutoCorrelatorSink(gr.hier_block2):
     """
@@ -63,4 +64,4 @@ class AutoCorrelatorSink(gr.hier_block2):
         # self.pyWin.show()
 
     def getWidget(self):
-        return sip.wrapinstance(self.timeSink.pyqwidget(), QtGui.QWidget)
+        return sip.wrapinstance(self.timeSink.pyqwidget(), QWidget)

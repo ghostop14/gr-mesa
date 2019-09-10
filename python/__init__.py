@@ -22,16 +22,18 @@
 This is the GNU Radio MESA module. Place your Python package
 description here (python/__init__.py).
 '''
+from __future__ import unicode_literals
 
 # import swig generated symbols into the mesa namespace
 try:
-	# this might fail if the module is python-only
-	from mesa_swig import *
+    # this might fail if the module is python-only
+    from .mesa_swig import *
 except ImportError:
-	pass
+    pass
 
 # import any pure python here
-from AutoCorrelator import AutoCorrelator
-from AutoCorrelatorSink import AutoCorrelatorSink
-from Normalize import Normalize
 #
+from .AutoCorrelator import AutoCorrelator
+from .AutoCorrelatorSink import AutoCorrelatorSink
+from .Normalize import Normalize
+

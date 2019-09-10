@@ -42,7 +42,6 @@ namespace gr {
 
       virtual void set_input_index(int newValue);
       virtual void set_output_index(int newValue);
-      void setup_rpc();
 
       void handleMsgInputIndex(pmt::pmt_t msg);
       void handleMsgOutputIndex(pmt::pmt_t msg);

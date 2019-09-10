@@ -108,29 +108,6 @@ namespace gr {
       return noutput_items;
     }
 
-    void
-	ioselector_impl::setup_rpc()
-    {
-#ifdef GR_CTRLPORT
-      // Setters
-      add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_set<ioselector_impl, float>(
-	  alias(), "inputindex",
-	  &ioselector_impl::set_input_index,
-      pmt::mp(0), pmt::mp(0), pmt::mp(0),
-      "index", "inputindex", RPC_PRIVLVL_MIN,
-      DISPTIME | DISPOPTSTRIP)));
-
-      add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_set<ioselector_impl, float>(
-	  alias(), "outputindex",
-	  &ioselector_impl::set_output_index,
-      pmt::mp(0), pmt::mp(0), pmt::mp(0),
-      "index", "outputindex", RPC_PRIVLVL_MIN,
-      DISPTIME | DISPOPTSTRIP)));
-
-#endif /* GR_CTRLPORT */
-    }
   } /* namespace mesa */
 } /* namespace gr */
 
