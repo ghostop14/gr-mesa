@@ -9,7 +9,7 @@ parameters:
     label: Vector Length
     dtype: int
     default: '1024'
-    hide: ${ 'part' if vlen == 1 else 'none' }
+    hide: ${ 'part' if veclen == 1 else 'none' }
 -   id: hold
     label: Lock
     dtype: bool
