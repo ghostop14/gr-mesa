@@ -13,6 +13,7 @@ gr-mesa is a project to incorporate some enhanced fundamental signal identificat
 7. Normalize - Take an input vector and normalize all values to 1.0.
 8. Phase Shift - Shift an incoming signal by shift_radians.  Shift can be controlled via variable or incoming float message
 9. Average to Message - Take the average of an incoming float vector and output the scalar average as a message
+10. Variable Rotator - While named and functioning more generically, the drive behind this block was a block that could rotate frequencies as part of a GNURadio-based scanner.  The block id can be used as a variable, and 2 messages get output: One is the current value, and one is the corresponding index from the list of provided values.  The index facilitates different downstream processing paths using the IO Selector for each value.  For instance, if the list is frequencies, f1 may be NBFM, f2 may be digital, etc.  The block also has a message input that can be used to lock/hold a frequency where activity is detected.  See the Scanner section below for more details.
 
 ## Building
 gr-mesa has no core dependencies.  However if you will be using the state out ports, it is highly recommended to install gr-filerepeater as additional state blocks are included there.
@@ -34,4 +35,21 @@ sudo ldconfig
 ``
 
 If each step was successful (do not overlook the "sudo ldconfig" step if this is the first installation).
+
+## GNURadio based Scanner
+One exciting solution that could be developed with gr-mesa is a complete GNURadio-based scanner.  And a basic working flowgraph that scans for voice NBFM signals is in the examples directly as examples/scanner_fm.grc.  The key components behind this are the Variable Rotator block which provides the fundamentals to iterate through a frequency list at set time intervals.  The rotator also outputs an index corresponding to the configured list so that different downstream processing paths can be taken for each frequency (if that's how you would like to use it).  The Signal Detector block is then combined with this to detect when a signal is actually present.  This mimics the basic scanner function of "is there a signal present?  If so, stop here."  The state output from the Signal Detector goes high when a signal is detected, when matches up with the hold input of the rotator block creating the necessary feedback loop to hold on a channel when a signal is detected.
+
+In the example flowgraph, each path for 3 different frequencies is looking for a NBFM audio/analog signal.  Each path uses a separate signal detector such that when the processing holds on a channel, the individual channel signal detector goes high telling an Advanced File Sink from the gr-filerepeater OOT module to start recording the signal to a WAV file that can be played back with any WAV file player.  When the signal goes away on the active frequency and the variable rotator's hold is released and it goes to the next frequency, the individual channel detector will transition low after a hold period and close the file.  The net result of this whole process is individual recordings for each signal detection on each channel saved in files named and timestamped corresponding to their frequency.
+
+The example also uses 2 blocks from the gr-guiextra OOT module for some better visualization to complete the scanner.  The first is a familiar frequency / digital number display.  The other is a push / toggle button.  These when combined with the State Message Or block from gr-filerepeater mean that you can within the flowgraph dynamically HOLD or lock onto the current frequency.  This tells the rotator to not go to the next frequency until the hold is released and there is no signal. With all of that said, this is a very basic but functioning example and the flowgraph provides a framework for more advanced processing depending on your needs.
+
+From this example, it's up to you how complex you make it.  A couple of suggestions to keep in mind:
+1. Test a single processing track in an isolated flowgraph before thinking something isn't working.  And watch any decimations along the way if you integrate a number of stand-alone flowgraphs into one with frequency rotation.
+2. The rotation most likely won't be timing-accurate enough to follow say FHSS, so if you try to put your own together to do that, it probably won't work.
+3. Watch how different the frequencies are relative to the tuning of your antenna.  Antenna rules still apply.  An antenna tuned to 2m won't be optimal on 70cm, etc.
+4. In the basic example flowgraph provided, you'll see different thresholds set in each track for the signal detector squelch thresholds.  This is specifically to adjust differences observed due to (3) with the example frequencies used.  You'll need to manually monitor and experiment with the best values here depending on the frequencies you select and overall design.
+5. See the developer's notes below about non QtGUI flowgraphs with the rotator.
+
+### DEVELOPER NOTES
+There are a few "tricks" in the Variable Rotator block worth mentioning.  First, because a separate thread is used to control the scheduling of rotation and messages, sending pmt messages within the Qt GUI context runs into exceptions sending cross-thread.  As a result, the workaround was to create the block as a QFrame and leverage Qt's signaling mechanisms to queue it into the message queue of the primary thread with an emit() call.  So no GUI control is visually displayed, but one is used behind the scenes to allow for cross-thread behavior to work as expected.  While not tested, this COULD mean that using the variable rotator may not work in non-QtGUI flowgraphs.  Just something to keep in mind.
 

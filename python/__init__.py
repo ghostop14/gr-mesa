@@ -36,4 +36,5 @@ except ImportError:
 from .AutoCorrelator import AutoCorrelator
 from .AutoCorrelatorSink import AutoCorrelatorSink
 from .Normalize import Normalize
+from .VariableRotator import VariableRotator
 

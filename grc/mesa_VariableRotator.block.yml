@@ -1,0 +1,46 @@
+id: mesa_VariableRotator
+label: Variable Rotator
+category: '[mesa]'
+flags: [ show_id, python ]
+
+parameters:
+-   id: valueList
+    label: Value List
+    dtype: float_vector
+    default: 100.0e6,101.0e6,102.0e6
+-   id: rotationTime
+    label: Rotation Time (sec)
+    dtype: float
+    default: '2.0'
+value: ${ valueList[0] }
+    
+inputs:
+-   domain: message
+    id: hold
+    optional: true
+    
+outputs:
+-   domain: message
+    id: value
+    optional: true
+-   domain: message
+    id: index
+    optional: true
+
+templates:
+    imports: import mesa
+    var_make: self.${id} = ${id} = ${valueList}[0]
+    make: |-
+        <%
+            win = 'self._%s_var_rotator_win'%id
+        %>\
+        ${win} = mesa.VariableRotator(${valueList}, ${rotationTime},self.set_${id},self)
+        self.${id} = ${win}
+
+documentation: |-
+    This block will change the value of the specified and output a value message at the specified interval unless a hold message is high (integer message set to 1).  The index output corresponds to the index in the supplied list for the current value.  This can be combined with other controls to take different processing paths depending on the value (e.g. a frequency scanner with different decoders)
+
+
+#  'file_format' specifies the version of the GRC yml format used in the file
+#  and should usually not be changed.
+file_format: 1
