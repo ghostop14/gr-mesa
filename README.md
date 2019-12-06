@@ -36,7 +36,7 @@ sudo ldconfig
 
 If each step was successful (do not overlook the "sudo ldconfig" step if this is the first installation).
 
-## GNURadio based Scanner
+## GNURadio-Based Scanner
 One exciting solution that could be developed with gr-mesa is a complete GNURadio-based scanner.  And a basic working flowgraph that scans for voice NBFM signals is in the examples directly as examples/scanner_fm.grc.  The key components behind this are the Variable Rotator block which provides the fundamentals to iterate through a frequency list at set time intervals.  The rotator also outputs an index corresponding to the configured list so that different downstream processing paths can be taken for each frequency (if that's how you would like to use it).  The Signal Detector block is then combined with this to detect when a signal is actually present.  This mimics the basic scanner function of "is there a signal present?  If so, stop here."  The state output from the Signal Detector goes high when a signal is detected, when matches up with the hold input of the rotator block creating the necessary feedback loop to hold on a channel when a signal is detected.
 
 In the example flowgraph, each path for 3 different frequencies is looking for a NBFM audio/analog signal.  Each path uses a separate signal detector such that when the processing holds on a channel, the individual channel signal detector goes high telling an Advanced File Sink from the gr-filerepeater OOT module to start recording the signal to a WAV file that can be played back with any WAV file player.  When the signal goes away on the active frequency and the variable rotator's hold is released and it goes to the next frequency, the individual channel detector will transition low after a hold period and close the file.  The net result of this whole process is individual recordings for each signal detection on each channel saved in files named and timestamped corresponding to their frequency.
@@ -50,6 +50,6 @@ From this example, it's up to you how complex you make it.  A couple of suggesti
 4. In the basic example flowgraph provided, you'll see different thresholds set in each track for the signal detector squelch thresholds.  This is specifically to adjust differences observed due to (3) with the example frequencies used.  You'll need to manually monitor and experiment with the best values here depending on the frequencies you select and overall design.
 5. See the developer's notes below about non QtGUI flowgraphs with the rotator.
 
-### DEVELOPER NOTES
+### Variable Rotator Technical / Developer Notes
 There are a few "tricks" in the Variable Rotator block worth mentioning.  First, because a separate thread is used to control the scheduling of rotation and messages, sending pmt messages within the Qt GUI context runs into exceptions sending cross-thread.  As a result, the workaround was to create the block as a QFrame and leverage Qt's signaling mechanisms to queue it into the message queue of the primary thread with an emit() call.  So no GUI control is visually displayed, but one is used behind the scenes to allow for cross-thread behavior to work as expected.  While not tested, this COULD mean that using the variable rotator may not work in non-QtGUI flowgraphs.  Just something to keep in mind.
 
