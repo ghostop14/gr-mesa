@@ -10,7 +10,7 @@ options:
     gen_linking: dynamic
     generate_options: qt_gui
     hier_block_src_path: '.:'
-    id: scanner_fm
+    id: scanner_fm_single_decode
     max_nouts: '0'
     output_language: python
     placement: (0,0)
@@ -21,7 +21,7 @@ options:
     run_options: prompt
     sizing_mode: fixed
     thread_safe_setters: ''
-    title: NBFM Scanner
+    title: NBFM Scanner - Single Decoder
     window_size: ''
   states:
     bus_sink: false
@@ -167,45 +167,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [928, 300.0]
-    rotation: 0
-    state: enabled
-- name: analog_nbfm_rx_0_0
-  id: analog_nbfm_rx
-  parameters:
-    affinity: ''
-    alias: ''
-    audio_rate: int(48e3)
-    comment: ''
-    max_dev: 3e3
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    quad_rate: int(480e3)
-    tau: 75e-6
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [928, 412.0]
-    rotation: 0
-    state: enabled
-- name: analog_nbfm_rx_0_0_0
-  id: analog_nbfm_rx
-  parameters:
-    affinity: ''
-    alias: ''
-    audio_rate: int(48e3)
-    comment: ''
-    max_dev: 3e3
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    quad_rate: int(480e3)
-    tau: 75e-6
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [920, 668.0]
+    coordinate: [968, 260.0]
     rotation: 0
     state: enabled
 - name: audio_sink_0
@@ -222,8 +184,8 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1232, 836.0]
-    rotation: 0
+    coordinate: [1192, 468.0]
+    rotation: 180
     state: enabled
 - name: blocks_multiply_const_vxx_0
   id: blocks_multiply_const_vxx
@@ -240,8 +202,8 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1232, 756.0]
-    rotation: 180
+    coordinate: [1200, 380.0]
+    rotation: 0
     state: enabled
 - name: filerepeater_AdvFileSink_0
   id: filerepeater_AdvFileSink
@@ -249,11 +211,11 @@ blocks:
     affinity: ''
     alias: ''
     autostartFreqChange: 'False'
-    basedir: /opt/tmp/scanner
-    basefile: ch1
+    basedir: /opt/tmp/scanner2
+    basefile: scan
     bits_per_sample: '8'
     comment: ''
-    honorFreqChange: 'False'
+    honorFreqChange: 'True'
     maxSize: '0'
     maxTimeSec: '0'
     radioCenterFreq: freq
@@ -268,59 +230,7 @@ blocks:
     bus_structure: null
     coordinate: [1424, 132.0]
     rotation: 0
-    state: true
-- name: filerepeater_AdvFileSink_0_0
-  id: filerepeater_AdvFileSink
-  parameters:
-    affinity: ''
-    alias: ''
-    autostartFreqChange: 'False'
-    basedir: /opt/tmp/scanner
-    basefile: ch2
-    bits_per_sample: '8'
-    comment: ''
-    honorFreqChange: 'False'
-    maxSize: '0'
-    maxTimeSec: '0'
-    radioCenterFreq: freq
-    recordOnStart: 'False'
-    sampleRate: '48000'
-    type: floatwav
-    unbuffered: 'False'
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1424, 340.0]
-    rotation: 0
-    state: true
-- name: filerepeater_AdvFileSink_0_0_0
-  id: filerepeater_AdvFileSink
-  parameters:
-    affinity: ''
-    alias: ''
-    autostartFreqChange: 'False'
-    basedir: /opt/tmp/scanner
-    basefile: ch3
-    bits_per_sample: '8'
-    comment: ''
-    honorFreqChange: 'False'
-    maxSize: '0'
-    maxTimeSec: '0'
-    radioCenterFreq: freq
-    recordOnStart: 'False'
-    sampleRate: '48000'
-    type: floatwav
-    unbuffered: 'False'
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1432, 580.0]
-    rotation: 0
-    state: true
+    state: enabled
 - name: filerepeater_StateOr_0
   id: filerepeater_StateOr
   parameters:
@@ -415,118 +325,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [624, 204.0]
+    coordinate: [616, 244.0]
     rotation: 0
     state: enabled
-- name: mesa_SignalDetector_0_0_0
-  id: mesa_SignalDetector
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    detectionMethod: '1'
-    enableDebug: 'False'
-    fft_size: '1024'
-    framesToAvg: '6'
-    genSignalPDUs: 'False'
-    holdUpSec: '3.0'
-    maxWidthHz: '14000.0'
-    maxoutbuf: '0'
-    minWidthHz: '6000.0'
-    minoutbuf: '0'
-    radioCenterFreq: freq
-    sampleRate: int(samp_rate/5)
-    squelchThreshold: '-58.0'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [672, 492.0]
-    rotation: 0
-    state: enabled
-- name: mesa_SignalDetector_0_0_0_0
-  id: mesa_SignalDetector
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    detectionMethod: '1'
-    enableDebug: 'False'
-    fft_size: '1024'
-    framesToAvg: '6'
-    genSignalPDUs: 'False'
-    holdUpSec: '3.0'
-    maxWidthHz: '14000.0'
-    maxoutbuf: '0'
-    minWidthHz: '6000.0'
-    minoutbuf: '0'
-    radioCenterFreq: freq
-    sampleRate: int(samp_rate/5)
-    squelchThreshold: '-68.0'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [664, 724.0]
-    rotation: 0
-    state: enabled
-- name: mesa_ioselector_0
-  id: mesa_ioselector
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    input_index: '0'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    num_inputs: '1'
-    num_outputs: '3'
-    output_index: '0'
-    type: complex
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [512, 528.0]
-    rotation: 0
-    state: true
-- name: mesa_ioselector_1
-  id: mesa_ioselector
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    input_index: '0'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    num_inputs: '3'
-    num_outputs: '1'
-    output_index: '0'
-    type: float
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1232, 480.0]
-    rotation: 0
-    state: true
-- name: note_0
-  id: note
-  parameters:
-    alias: ''
-    comment: 'Each of these paths can process ths signal differently if necessary.
-
-      For this example they all do the same thing, decode a NBFM voice channel.'
-    note: Note
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [944, 180.0]
-    rotation: 0
-    state: true
 - name: note_0_0
   id: note
   parameters:
@@ -544,7 +345,9 @@ blocks:
   id: note
   parameters:
     alias: ''
-    comment: If this block is missing, install gr-guiextra
+    comment: 'If this block is missing, install gr-guiextra
+
+      and sudo pip3 install pyqtchart'
     note: Note
   states:
     bus_sink: false
@@ -564,6 +367,25 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [32, 300.0]
+    rotation: 0
+    state: true
+- name: note_0_0_0_0_0
+  id: note
+  parameters:
+    alias: ''
+    comment: 'This differs from the other scanner example
+
+      in that it uses a single type of decode for all frequencies
+
+      and keys off of the frequency value in the file sink
+
+      parameters to rotate the file name.'
+    note: Note
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1424, 348.0]
     rotation: 0
     state: true
 - name: qtgui_freq_sink_x_0
@@ -1014,34 +836,20 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [40, 140.0]
+    coordinate: [24, 124.0]
     rotation: 0
     state: true
 
 connections:
+- [analog_nbfm_rx_0, '0', blocks_multiply_const_vxx_0, '0']
 - [analog_nbfm_rx_0, '0', filerepeater_AdvFileSink_0, '0']
-- [analog_nbfm_rx_0, '0', mesa_ioselector_1, '0']
-- [analog_nbfm_rx_0_0, '0', filerepeater_AdvFileSink_0_0, '0']
-- [analog_nbfm_rx_0_0, '0', mesa_ioselector_1, '1']
-- [analog_nbfm_rx_0_0_0, '0', filerepeater_AdvFileSink_0_0_0, '0']
-- [analog_nbfm_rx_0_0_0, '0', mesa_ioselector_1, '2']
 - [blocks_multiply_const_vxx_0, '0', audio_sink_0, '0']
 - [filerepeater_StateOr_0, state, freq, hold]
-- [freq, index, mesa_ioselector_0, outputindex]
-- [freq, index, mesa_ioselector_1, inputindex]
 - [lfast_low_pass_filter_0, '0', mesa_SignalDetector_0, '0']
-- [mesa_SignalDetector_0, '0', mesa_ioselector_0, '0']
+- [mesa_SignalDetector_0, '0', mesa_SignalDetector_0_0, '0']
 - [mesa_SignalDetector_0, state, filerepeater_StateOr_0, state2]
 - [mesa_SignalDetector_0_0, '0', analog_nbfm_rx_0, '0']
 - [mesa_SignalDetector_0_0, state, filerepeater_AdvFileSink_0, recordstate]
-- [mesa_SignalDetector_0_0_0, '0', analog_nbfm_rx_0_0, '0']
-- [mesa_SignalDetector_0_0_0, state, filerepeater_AdvFileSink_0_0, recordstate]
-- [mesa_SignalDetector_0_0_0_0, '0', analog_nbfm_rx_0_0_0, '0']
-- [mesa_SignalDetector_0_0_0_0, state, filerepeater_AdvFileSink_0_0_0, recordstate]
-- [mesa_ioselector_0, '0', mesa_SignalDetector_0_0, '0']
-- [mesa_ioselector_0, '1', mesa_SignalDetector_0_0_0, '0']
-- [mesa_ioselector_0, '2', mesa_SignalDetector_0_0_0_0, '0']
-- [mesa_ioselector_1, '0', blocks_multiply_const_vxx_0, '0']
 - [uhd_usrp_source_1, '0', lfast_low_pass_filter_0, '0']
 - [uhd_usrp_source_1, '0', qtgui_freq_sink_x_0, '0']
 - [variable_qtgui_toggle_button_msg_0, state, filerepeater_StateOr_0, state1]
