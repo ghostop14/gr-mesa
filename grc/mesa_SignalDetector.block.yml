@@ -10,7 +10,7 @@ parameters:
     dtype: int
     default: '1024'
 -   id: squelchThreshold
-    label: Squelch Threshold
+    label: Sig Detect Threshold
     dtype: float
     default: '-80.0'
 -   id: minWidthHz
@@ -103,8 +103,8 @@ documentation: "This block scans the input signal looking for sub signals of the
     \ CONNECTOR SENDS A MESSAGE FOR EACH DETECTED SIGNAL IN A GIVEN INPUT BUFFER.\
     \  This means that the out data will be sent along with the detected signal info\
     \ for EACH detected signal in a given input buffer.  If you write this to say\
-    \ a file sink or assume it's a single pipeline downstream, it's NOT!\n\nFor SQUELCHTHRESHOLD,\
-    \ pick a number that's above any noise floor.  The detector looks for the upward\
+    \ a file sink or assume it's a single pipeline downstream, it's NOT!\n\nFor the signal detect threshold,\
+    \ pick a number that's above any noise floor to avoid false positives.  The detector looks for the upward\
     \ transition from this squelch threshold, therefore everything that's not a signal\
     \ should be below this threshold, such that everything above it can be assumed\
     \ to be a signal."
