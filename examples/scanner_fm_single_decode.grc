@@ -167,7 +167,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [968, 260.0]
+    coordinate: [800, 228.0]
     rotation: 0
     state: enabled
 - name: audio_sink_0
@@ -298,34 +298,6 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [264, 284.0]
-    rotation: 0
-    state: enabled
-- name: mesa_SignalDetector_0_0
-  id: mesa_SignalDetector
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: "This detects if a signal is present, and if it is, emits a state high\
-      \ message. \nThe variable rotator processes that message as a hold-the-rotation\
-      \ message."
-    detectionMethod: '1'
-    enableDebug: 'False'
-    fft_size: '1024'
-    framesToAvg: '6'
-    genSignalPDUs: 'False'
-    holdUpSec: '3.0'
-    maxWidthHz: '14000.0'
-    maxoutbuf: '0'
-    minWidthHz: '6000.0'
-    minoutbuf: '0'
-    radioCenterFreq: freq
-    sampleRate: int(samp_rate/5)
-    squelchThreshold: '-50.0'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [616, 244.0]
     rotation: 0
     state: enabled
 - name: note_0_0
@@ -846,10 +818,9 @@ connections:
 - [blocks_multiply_const_vxx_0, '0', audio_sink_0, '0']
 - [filerepeater_StateOr_0, state, freq, hold]
 - [lfast_low_pass_filter_0, '0', mesa_SignalDetector_0, '0']
-- [mesa_SignalDetector_0, '0', mesa_SignalDetector_0_0, '0']
+- [mesa_SignalDetector_0, '0', analog_nbfm_rx_0, '0']
+- [mesa_SignalDetector_0, state, filerepeater_AdvFileSink_0, recordstate]
 - [mesa_SignalDetector_0, state, filerepeater_StateOr_0, state2]
-- [mesa_SignalDetector_0_0, '0', analog_nbfm_rx_0, '0']
-- [mesa_SignalDetector_0_0, state, filerepeater_AdvFileSink_0, recordstate]
 - [uhd_usrp_source_1, '0', lfast_low_pass_filter_0, '0']
 - [uhd_usrp_source_1, '0', qtgui_freq_sink_x_0, '0']
 - [variable_qtgui_toggle_button_msg_0, state, filerepeater_StateOr_0, state1]
