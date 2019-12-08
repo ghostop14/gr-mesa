@@ -46,7 +46,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [168, 572.0]
+    coordinate: [216, 676.0]
     rotation: 0
     state: enabled
 - name: gain
@@ -127,7 +127,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [20.0, 672]
+    coordinate: [20.0, 736]
     rotation: 90
     state: true
 - name: volume
@@ -333,7 +333,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [56, 496.0]
+    coordinate: [152, 544.0]
     rotation: 0
     state: true
 - name: lfast_low_pass_filter_0
@@ -342,9 +342,9 @@ blocks:
     affinity: ''
     alias: ''
     beta: '6.76'
-    comment: 'NBFM.  12.5 kHz
+    comment: 'NBFM.  12.5 kHz.  Set to 14 kHz
 
-      600K, 2369 taps'
+      FFT LPF is more efficient'
     cutoff_freq: 7e3
     decim: '5'
     gain: '1'
@@ -359,7 +359,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [48, 292.0]
+    coordinate: [32, 364.0]
     rotation: 0
     state: enabled
 - name: mesa_SignalDetector_0
@@ -387,7 +387,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [240, 284.0]
+    coordinate: [264, 284.0]
     rotation: 0
     state: enabled
 - name: mesa_SignalDetector_0_0
@@ -551,6 +551,19 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [336, 12.0]
+    rotation: 0
+    state: true
+- name: note_0_0_0_0
+  id: note
+  parameters:
+    alias: ''
+    comment: If FFT LPF block is missing, install gr-lfast
+    note: Note
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [32, 300.0]
     rotation: 0
     state: true
 - name: qtgui_freq_sink_x_0
@@ -984,7 +997,7 @@ blocks:
     sd_spec5: ''
     sd_spec6: ''
     sd_spec7: ''
-    show_lo_controls: 'False'
+    show_lo_controls: 'True'
     stream_args: ''
     stream_chans: '[]'
     sync: sync
