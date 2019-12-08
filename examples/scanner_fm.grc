@@ -53,7 +53,7 @@ blocks:
   id: variable_qtgui_range
   parameters:
     comment: ''
-    gui_hint: 0,2,1,1
+    gui_hint: 0,1,1,1
     label: gain
     min_len: '200'
     orient: Qt.Horizontal
@@ -67,7 +67,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [808, 20.0]
+    coordinate: [752, 20.0]
     rotation: 0
     state: enabled
 - name: guiextra_msgdigitalnumbercontrol_0
@@ -107,11 +107,44 @@ blocks:
     coordinate: [184, 12]
     rotation: 0
     state: enabled
+- name: scanner_dir
+  id: variable
+  parameters:
+    comment: ''
+    value: '"/opt/tmp/scanner"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1168, 12.0]
+    rotation: 0
+    state: enabled
+- name: threshold
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: 0,2,1,2
+    label: Sig Detect Threshold
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: '-80'
+    step: '2'
+    stop: '-40'
+    value: '-68'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [896, 20.0]
+    rotation: 0
+    state: enabled
 - name: variable_qtgui_toggle_button_msg_0
   id: variable_qtgui_toggle_button_msg
   parameters:
     comment: ''
-    gui_hint: 1,0,1,1
+    gui_hint: 2,0,1,1
     initPressed: 'False'
     label: Lock Channel
     outputmsgname: value
@@ -134,7 +167,7 @@ blocks:
   id: variable_qtgui_range
   parameters:
     comment: ''
-    gui_hint: 0,1,1,1
+    gui_hint: 1,0,1,1
     label: Volume
     min_len: '200'
     orient: Qt.Horizontal
@@ -148,7 +181,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [640, 20.0]
+    coordinate: [592, 20.0]
     rotation: 0
     state: enabled
 - name: analog_nbfm_rx_0
@@ -249,7 +282,7 @@ blocks:
     affinity: ''
     alias: ''
     autostartFreqChange: 'False'
-    basedir: /opt/tmp/scanner
+    basedir: scanner_dir
     basefile: ch1
     bits_per_sample: '8'
     comment: ''
@@ -275,7 +308,7 @@ blocks:
     affinity: ''
     alias: ''
     autostartFreqChange: 'False'
-    basedir: /opt/tmp/scanner
+    basedir: scanner_dir
     basefile: ch2
     bits_per_sample: '8'
     comment: ''
@@ -301,7 +334,7 @@ blocks:
     affinity: ''
     alias: ''
     autostartFreqChange: 'False'
-    basedir: /opt/tmp/scanner
+    basedir: scanner_dir
     basefile: ch3
     bits_per_sample: '8'
     comment: ''
@@ -382,7 +415,7 @@ blocks:
     minoutbuf: '0'
     radioCenterFreq: freq
     sampleRate: int(samp_rate/5)
-    squelchThreshold: '-68.0'
+    squelchThreshold: threshold
   states:
     bus_sink: false
     bus_source: false
@@ -601,7 +634,7 @@ blocks:
     fftsize: '1024'
     freqhalf: 'True'
     grid: 'False'
-    gui_hint: 2,0,1,3
+    gui_hint: 3,0,1,4
     label: Relative Gain
     label1: ''
     label10: ''''''
