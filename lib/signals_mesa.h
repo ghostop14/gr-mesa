@@ -133,8 +133,8 @@ namespace MesaSignals {
 		virtual ~SignalOverview() {};
 		SignalOverview& operator=(const SignalOverview& other);
 
-		float widthHz = 0.0;
-		float centerFreqHz = 0.0;
+		double widthHz = 0.0;
+		double centerFreqHz = 0.0;
 		float maxPower = NOISE_FLOOR;
 
 		void print();
@@ -149,7 +149,7 @@ namespace MesaSignals {
 	class WaterfallData {
 	public:
 		// Waterfall will be fftSize wide by numRows long
-		float centerFrequency;
+		double centerFrequency;
 		int fftSize;
 		long numRows;
 
@@ -221,14 +221,14 @@ namespace MesaSignals {
 		// Note it does use the squelchThreshold value set in the constructor as well.
 		// edgeDBDown defines required drop-off on edges (e.g. 15 dB for valid signal)
 		// Note: It's best to feed a squelched spectrum (say from FFT::PowerSpectralDensity or from maxHold) to this.
-		int findSignals(const float *spectrum, float sampleRate, float centerFrequencyHz, float minWidthHz, float maxWidthHz,
+		int findSignals(const float *spectrum, double sampleRate, double centerFrequencyHz, double minWidthHz, double maxWidthHz,
 						SignalOverviewVector& signalVector, bool stopOnFirst);
 						// float edgeDBDown, SignalOverviewVector& signalVector, bool stopOnFirst);
 
 		// findSingleSignal makes some assumptions, first that the potential input signal has been filtered to the band that may contain
 		// the signal.  Second, that there may only be a single signal.  Therefore a simple boxing method can be applied to determine
 		// any signal that may be present.  The minWidthHz is used to ensure whatever is found at least meets the minimum.
-		int findSingleSignal(const float *spectrum, float sampleRate, float centerFrequencyHz, float minWidthHz, SignalOverview& signalOverview);
+		int findSingleSignal(const float *spectrum, double sampleRate, double centerFrequencyHz, double minWidthHz, SignalOverview& signalOverview);
 
 		long getWaterfall(const SComplex *frame,long numSamples,WaterfallData& waterfallData);
 

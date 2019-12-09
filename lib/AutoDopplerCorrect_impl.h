@@ -48,34 +48,32 @@ namespace gr {
         gr_complex *pMsgOutBuff;
         int msgBufferSize;
 
-    	float d_sampleRate;
+    	double d_sampleRate;
     	float d_gain;
-    	float d_centerFreq;
-    	float d_maxDrift;
-    	float d_expectedWidth;
+    	double d_centerFreq;
+    	double d_maxDrift;
+    	double d_expectedWidth;
 		int d_shiftHolddownMS;
 		bool d_processMessages;
 
     	int d_framesToAvg;
     	int d_fftSize;
-    	float d_minWidthHz;
-    	float d_maxWidthHz;
+    	double d_minWidthHz;
+    	double d_maxWidthHz;
     	bool d_startInitialized;
     	float d_holdUpSec;
 
-    	float d_currentFreqShiftDelta;
+    	double d_currentFreqShiftDelta;
 
 		std::chrono::time_point<std::chrono::steady_clock> lastSeen, lastShifted;
 
-		virtual void sendMessageData(gr_complex *data,long datasize, float signalCenterFreq, float signalWidth, float maxPower, pmt::pmt_t *pMetadata);
+		virtual void sendMessageData(gr_complex *data,long datasize, double signalCenterFreq, double signalWidth, float maxPower, pmt::pmt_t *pMetadata);
 		void sendState(bool state);
 
      public:
-      AutoDopplerCorrect_impl(float freq, float sampleRate, float maxDrift, float minWidth, float expectedWidth, int shiftHolddownMS, int fft_size,
+      AutoDopplerCorrect_impl(double freq, double sampleRate, double maxDrift, double minWidth, double expectedWidth, int shiftHolddownMS, int fft_size,
       		float squelchThreshold, int framesToAvg, float holdUpSec, bool processMessages, int detectionMethod);
       ~AutoDopplerCorrect_impl();
-
-      void setup_rpc();
 
       virtual bool stop();
 
@@ -92,17 +90,17 @@ namespace gr {
       virtual float getSquelch() const;
       virtual void setSquelch(float newValue);
 
-      virtual float getCenterFrequency() const;
-      virtual void setCenterFrequency(float newValue);
+      virtual double getCenterFrequency() const;
+      virtual void setCenterFrequency(double newValue);
 
-      virtual float getMinWidthHz() const;
-      virtual void setMinWidthHz(float newValue);
+      virtual double getMinWidthHz() const;
+      virtual void setMinWidthHz(double newValue);
 
-      virtual float getExpectedWidth() const;
-      virtual void setExpectedWidth(float newValue);
+      virtual double getExpectedWidth() const;
+      virtual void setExpectedWidth(double newValue);
 
-      virtual float getMaxDrift() const;
-      virtual void setMaxDrift(float newValue);
+      virtual double getMaxDrift() const;
+      virtual void setMaxDrift(double newValue);
 
     };
 

@@ -46,20 +46,20 @@ namespace gr {
        * class. mesa::SignalDetector::make is the public interface for
        * creating new instances.
        */
-      static sptr make(int fftsize, float squelchThreshold, float minWidthHz, float maxWidthHz, float radioCenterFreq, float sampleRate, float holdUpSec,
+      static sptr make(int fftsize, float squelchThreshold, double minWidthHz, double maxWidthHz, double radioCenterFreq, double sampleRate, float holdUpSec,
     		  	  	  int framesToAvg, bool genSignalPDUs, bool enableDebug, int detectionMethod);
 
       virtual float getSquelch() const = 0;
       virtual void setSquelch(float newValue) = 0;
 
-      virtual float getCenterFrequency() const = 0;
-      virtual void setCenterFrequency(float newValue) = 0;
+      virtual double getCenterFrequency() const = 0;
+      virtual void setCenterFrequency(double newValue) = 0;
 
-      virtual float getMinWidthHz() const = 0;
-      virtual void setMinWidthHz(float newValue) = 0;
+      virtual double getMinWidthHz() const = 0;
+      virtual void setMinWidthHz(double newValue) = 0;
 
-      virtual float getMaxWidthHz() const = 0;
-      virtual void setMaxWidthHz(float newValue) = 0;
+      virtual double getMaxWidthHz() const = 0;
+      virtual void setMaxWidthHz(double newValue) = 0;
     };
 
   } // namespace mesa

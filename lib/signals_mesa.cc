@@ -723,12 +723,12 @@ float EnergyAnalyzer::maxPower(FloatVector& maxSpectrum) {
 	return maxSpectrum[index];
 }
 
-int EnergyAnalyzer::findSingleSignal(const float *spectrum, float sampleRate, float centerFrequencyHz, float minWidthHz, SignalOverview& signalOverview) {
+int EnergyAnalyzer::findSingleSignal(const float *spectrum, double sampleRate, double centerFrequencyHz, double minWidthHz, SignalOverview& signalOverview) {
 	if (spectrum == NULL)
 		return 0;
 
-	float hzPerBucket = sampleRate / (float)fftSize;
-	float minFrequency = centerFrequencyHz - (sampleRate / 2.0);
+	double hzPerBucket = sampleRate / (float)fftSize;
+	double minFrequency = centerFrequencyHz - (sampleRate / 2.0);
 	float maxPower = NOISE_FLOOR;
 
 	int fftStart = 0;
@@ -764,7 +764,7 @@ int EnergyAnalyzer::findSingleSignal(const float *spectrum, float sampleRate, fl
 			maxPower = spectrum[i];
 	}
 
-	float widthHz = (float)(fftEnd - fftStart + 1) * hzPerBucket;
+	double widthHz = (float)(fftEnd - fftStart + 1) * hzPerBucket;
 
 	if ((widthHz >= minWidthHz)) {
 		int centerBin = fftStart + (fftEnd - fftStart) / 2;
@@ -780,15 +780,15 @@ int EnergyAnalyzer::findSingleSignal(const float *spectrum, float sampleRate, fl
 
 }
 
-int EnergyAnalyzer::findSignals(const float *spectrum, float sampleRate, float centerFrequencyHz, float minWidthHz, float maxWidthHz,
+int EnergyAnalyzer::findSignals(const float *spectrum, double sampleRate, double centerFrequencyHz, double minWidthHz, double maxWidthHz,
 		SignalOverviewVector& signalVector, bool stopOnFirst) {
 //		float edgeDBDown,SignalOverviewVector& signalVector, bool stopOnFirst) {
 
 	if (spectrum == NULL)
 		return 0;
 
-	float hzPerBucket = sampleRate / (float)fftSize;
-	float minFrequency = centerFrequencyHz - (sampleRate / 2.0);
+	double hzPerBucket = sampleRate / (float)fftSize;
+	double minFrequency = centerFrequencyHz - (sampleRate / 2.0);
 
 	signalVector.clear();
 
@@ -841,7 +841,7 @@ int EnergyAnalyzer::findSignals(const float *spectrum, float sampleRate, float c
 				// looks like we found the far edge.
 				endBucket = i;
 
-				float widthHz = (float)(endBucket - startBucket + 1) * hzPerBucket;
+				double widthHz = (double)(endBucket - startBucket + 1) * hzPerBucket;
 
 				if ((widthHz >= minWidthHz) && (widthHz <= maxWidthHz)) {
 					if (maxPower > squelchThreshold) {
@@ -883,7 +883,7 @@ int EnergyAnalyzer::findSignals(const float *spectrum, float sampleRate, float c
 		// Signal was still continuing at the high edge of the spectrum.  So test last one.
 		endBucket = fftSize - 1; // set to last bucket
 
-		float widthHz = (float)(endBucket - startBucket) * hzPerBucket;
+		double widthHz = (double)(endBucket - startBucket) * hzPerBucket;
 
 		// Just check if what we have so far is wide enough
 		if (widthHz >= minWidthHz) {

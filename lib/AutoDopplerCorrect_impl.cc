@@ -36,7 +36,7 @@ namespace gr {
   namespace mesa {
 
     AutoDopplerCorrect::sptr
-    AutoDopplerCorrect::make(float freq, float sampleRate, float maxDrift, float minWidth, float expectedWidth, int shiftHolddownMS, int fft_size,
+    AutoDopplerCorrect::make(double freq, double sampleRate, double maxDrift, double minWidth, double expectedWidth, int shiftHolddownMS, int fft_size,
     		float squelchThreshold, int framesToAvg, float holdUpSec, bool processMessages, int detectionMethod)
     {
       return gnuradio::get_initial_sptr
@@ -46,7 +46,7 @@ namespace gr {
     /*
      * The private constructor
      */
-    AutoDopplerCorrect_impl::AutoDopplerCorrect_impl(float freq, float sampleRate, float maxDrift, float minWidth, float expectedWidth,
+    AutoDopplerCorrect_impl::AutoDopplerCorrect_impl(double freq, double sampleRate, double maxDrift, double minWidth, double expectedWidth,
     		int shiftHolddownMS, int fft_size, float squelchThreshold, int framesToAvg, float holdUpSec, bool processMessages, int detectionMethod)
       : gr::sync_block("AutoDopplerCorrect",gr::io_signature::make(1, 1, sizeof(gr_complex)),gr::io_signature::make(1, 1, sizeof(gr_complex)))
     {
@@ -143,11 +143,11 @@ namespace gr {
     	pEnergyAnalyzer->setThreshold(newValue);
     }
 
-    float AutoDopplerCorrect_impl::getCenterFrequency() const {
+    double AutoDopplerCorrect_impl::getCenterFrequency() const {
     	return d_centerFreq;
     }
 
-    void AutoDopplerCorrect_impl::setCenterFrequency(float newValue) {
+    void AutoDopplerCorrect_impl::setCenterFrequency(double newValue) {
     	// Since we moved the center frequency, if we're in a signal, let's send an end message, then reset
     	// center freq and shift.
     	gr::thread::scoped_lock guard(d_mutex);
@@ -168,14 +168,14 @@ namespace gr {
     	d_centerFreq = newValue;
     }
 
-    float AutoDopplerCorrect_impl::getMinWidthHz() const {
+    double AutoDopplerCorrect_impl::getMinWidthHz() const {
     	return d_minWidthHz;
     }
 
-    void AutoDopplerCorrect_impl::setMinWidthHz(float newValue) {
-    	float hzPerBucket = d_sampleRate / d_fftSize;
-    	float binsForMinHz = d_minWidthHz / hzPerBucket;
-    	float minDutyCycle = binsForMinHz / d_fftSize;
+    void AutoDopplerCorrect_impl::setMinWidthHz(double newValue) {
+    	double hzPerBucket = d_sampleRate / d_fftSize;
+    	double binsForMinHz = d_minWidthHz / hzPerBucket;
+    	double minDutyCycle = binsForMinHz / d_fftSize;
 
     	// Create energy analyzer
     	pEnergyAnalyzer->setDutyCycle(minDutyCycle);
@@ -183,20 +183,20 @@ namespace gr {
     	d_minWidthHz = newValue;
     }
 
-    float AutoDopplerCorrect_impl::getExpectedWidth() const {
+    double AutoDopplerCorrect_impl::getExpectedWidth() const {
     	return d_expectedWidth;
     }
 
-    void AutoDopplerCorrect_impl::setExpectedWidth(float newValue) {
+    void AutoDopplerCorrect_impl::setExpectedWidth(double newValue) {
     	d_expectedWidth = newValue;
     	d_maxWidthHz = d_expectedWidth * 1.4;
     }
 
-    float AutoDopplerCorrect_impl::getMaxDrift() const {
+    double AutoDopplerCorrect_impl::getMaxDrift() const {
     	return d_maxDrift;
     }
 
-    void AutoDopplerCorrect_impl::setMaxDrift(float newValue) {
+    void AutoDopplerCorrect_impl::setMaxDrift(double newValue) {
     	d_maxDrift = newValue;
     }
 
@@ -236,7 +236,7 @@ namespace gr {
 		int result = processData(noutput_items,cc_samples,pMsgOutBuff,&inputMetadata);
     }
 
-    void AutoDopplerCorrect_impl::sendMessageData(gr_complex *data,long datasize, float signalCenterFreq, float signalWidth, float maxPower, pmt::pmt_t *pMetadata) {
+    void AutoDopplerCorrect_impl::sendMessageData(gr_complex *data,long datasize, double signalCenterFreq, double signalWidth, float maxPower, pmt::pmt_t *pMetadata) {
 		if (!d_processMessages) {
 			return;
 		}
@@ -321,7 +321,7 @@ namespace gr {
         bool inHoldDown = false;
 		int closestIndex = 0;
 		int closestDelta = 1.0e6;
-		float curDelta;
+		double curDelta;
 
 		// Before processing, need to see if the detected signal is within our expected range or a neighboring signal
 		if (numSignals > 0) {
@@ -342,7 +342,7 @@ namespace gr {
 		bool foundGoodSignal = false;
 
 		for (int i=0;i<signalVector.size();i++) {
-			float curDelta = fabs(signalVector[i].centerFreqHz-d_centerFreq);
+			double curDelta = fabs(signalVector[i].centerFreqHz-d_centerFreq);
 			if (curDelta <= d_maxDrift)
 				foundGoodSignal = true;
 
@@ -455,7 +455,7 @@ namespace gr {
       			// We can update our shift
   				lastShifted = curTimestamp;
 
-  				float tmpShift = d_centerFreq - signalVector[0].centerFreqHz;
+  				double tmpShift = d_centerFreq - signalVector[0].centerFreqHz;
 
   				if (tmpShift != d_currentFreqShiftDelta && (fabs(tmpShift) <= d_maxDrift)) {
   	    			d_currentFreqShiftDelta = d_centerFreq - signalVector[closestIndex].centerFreqHz;
@@ -588,95 +588,6 @@ namespace gr {
       gr_complex *out = (gr_complex *) output_items[0];
 
       return processData(noutput_items,in,out,NULL);
-    }
-
-    void
-	AutoDopplerCorrect_impl::setup_rpc()
-    {
-#ifdef GR_CTRLPORT
-    	// Getters
-      add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_get<AutoDopplerCorrect_impl, float>(
-	  alias(), "Squelch",
-	  &AutoDopplerCorrect_impl::getSquelch,
-      pmt::mp(0.0), pmt::mp(100.0e6), pmt::mp(0.0),
-      "dB", "Squelch", RPC_PRIVLVL_MIN,
-      DISPTIME | DISPOPTSTRIP)));
-
-      add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_get<AutoDopplerCorrect_impl, float>(
-	  alias(), "minWidthHz",
-	  &AutoDopplerCorrect_impl::getMinWidthHz,
-      pmt::mp(0.0), pmt::mp(100.0e6), pmt::mp(0.0),
-      "Hz", "minWidthHz", RPC_PRIVLVL_MIN,
-      DISPTIME | DISPOPTSTRIP)));
-
-      add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_get<AutoDopplerCorrect_impl, float>(
-	  alias(), "Expected Width",
-	  &AutoDopplerCorrect_impl::getExpectedWidth,
-      pmt::mp(0.0), pmt::mp(5.0e3), pmt::mp(0.0),
-      "Hz", "Expected Width", RPC_PRIVLVL_MIN,
-      DISPTIME | DISPOPTSTRIP)));
-
-      add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_get<AutoDopplerCorrect_impl, float>(
-	  alias(), "Max Drift",
-	  &AutoDopplerCorrect_impl::getMaxDrift,
-      pmt::mp(0.0), pmt::mp(5.0e3), pmt::mp(0.0),
-      "Hz", "Max Drift", RPC_PRIVLVL_MIN,
-      DISPTIME | DISPOPTSTRIP)));
-
-      add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_get<AutoDopplerCorrect_impl, float>(
-	  alias(), "CenterFreq",
-	  &AutoDopplerCorrect_impl::getCenterFrequency,
-      pmt::mp(0.0), pmt::mp(100.0e6), pmt::mp(0.0),
-      "Hz", "CenterFreq", RPC_PRIVLVL_MIN,
-      DISPTIME | DISPOPTSTRIP)));
-
-      // Setters
-      add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_set<AutoDopplerCorrect_impl, float>(
-	  alias(), "Squelch",
-	  &AutoDopplerCorrect_impl::setSquelch,
-      pmt::mp(0.0), pmt::mp(100.0e6), pmt::mp(0.0),
-      "dB", "Squelch", RPC_PRIVLVL_MIN,
-      DISPTIME | DISPOPTSTRIP)));
-
-      add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_set<AutoDopplerCorrect_impl, float>(
-	  alias(), "minWidthHz",
-	  &AutoDopplerCorrect_impl::setMinWidthHz,
-      pmt::mp(0.0), pmt::mp(100.0e6), pmt::mp(0.0),
-      "Hz", "minWidthHz", RPC_PRIVLVL_MIN,
-      DISPTIME | DISPOPTSTRIP)));
-
-      add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_set<AutoDopplerCorrect_impl, float>(
-	  alias(), "Expected Width",
-	  &AutoDopplerCorrect_impl::setExpectedWidth,
-      pmt::mp(0.0), pmt::mp(5.0e3), pmt::mp(0.0),
-      "Hz", "Expected Width", RPC_PRIVLVL_MIN,
-      DISPTIME | DISPOPTSTRIP)));
-
-      add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_set<AutoDopplerCorrect_impl, float>(
-	  alias(), "Max Drift",
-	  &AutoDopplerCorrect_impl::setMaxDrift,
-      pmt::mp(0.0), pmt::mp(5.0e3), pmt::mp(0.0),
-      "Hz", "Max Drift", RPC_PRIVLVL_MIN,
-      DISPTIME | DISPOPTSTRIP)));
-
-      add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_set<AutoDopplerCorrect_impl, float>(
-	  alias(), "CenterFreq",
-	  &AutoDopplerCorrect_impl::setCenterFrequency,
-      pmt::mp(0.0), pmt::mp(100.0e6), pmt::mp(0.0),
-      "Hz", "CenterFreq", RPC_PRIVLVL_MIN,
-      DISPTIME | DISPOPTSTRIP)));
-
-#endif /* GR_CTRLPORT */
     }
 
   } /* namespace mesa */

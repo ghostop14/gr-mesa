@@ -29,7 +29,7 @@ namespace gr {
   namespace mesa {
 
     MaxPower::sptr
-    MaxPower::make(float sampleRate, int fft_size, float squelchThreshold, float framesToAvg, bool produceOut, float stateThreshold, float holdUpSec)
+    MaxPower::make(double sampleRate, int fft_size, float squelchThreshold, float framesToAvg, bool produceOut, float stateThreshold, float holdUpSec)
     {
       return gnuradio::get_initial_sptr
         (new MaxPower_impl(sampleRate, fft_size, squelchThreshold, framesToAvg,produceOut,stateThreshold, holdUpSec));
@@ -38,7 +38,7 @@ namespace gr {
     /*
      * The private constructor
      */
-    MaxPower_impl::MaxPower_impl(float sampleRate, int fft_size, float squelchThreshold, float framesToAvg, bool produceOut, float stateThreshold, float holdUpSec)
+    MaxPower_impl::MaxPower_impl(double sampleRate, int fft_size, float squelchThreshold, float framesToAvg, bool produceOut, float stateThreshold, float holdUpSec)
       : gr::sync_block("MaxPower",
               gr::io_signature::make(0, 1, sizeof(gr_complex)),
               gr::io_signature::make(0, 0, 0))

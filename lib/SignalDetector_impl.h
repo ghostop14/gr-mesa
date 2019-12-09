@@ -44,10 +44,10 @@ namespace gr {
     	gr_complex *pMsgOutBuff;
         int msgBufferSize;
 
-    	float d_sampleRate;
-    	float d_centerFreq;
-    	float d_minWidthHz;
-    	float d_maxWidthHz;
+        double d_sampleRate;
+        double d_centerFreq;
+        double d_minWidthHz;
+        double d_maxWidthHz;
     	int d_framesToAvg;
 
     	int d_fftSize;
@@ -65,26 +65,25 @@ namespace gr {
 		void sendState(bool state);
 
      public:
-      SignalDetector_impl(int fftsize, float squelchThreshold, float minWidthHz, float maxWidthHz, float radioCenterFreq, float sampleRate, float holdUpSec,
+      SignalDetector_impl(int fftsize, float squelchThreshold, double minWidthHz, double maxWidthHz, double radioCenterFreq, double sampleRate, float holdUpSec,
     		  	  	  	  	  int framesToAvg, bool genSignalPDUs, bool enableDebug, int detectionMethod);
       virtual ~SignalDetector_impl();
 
       virtual bool stop();
 
-      void setup_rpc();
       void handleMsgIn(pmt::pmt_t msg);
 
       virtual float getSquelch() const;
       virtual void setSquelch(float newValue);
 
-      virtual float getCenterFrequency() const;
-      virtual void setCenterFrequency(float newValue);
+      virtual double getCenterFrequency() const;
+      virtual void setCenterFrequency(double newValue);
 
-      virtual float getMinWidthHz() const;
-      virtual void setMinWidthHz(float newValue);
+      virtual double getMinWidthHz() const;
+      virtual void setMinWidthHz(double newValue);
 
-      virtual float getMaxWidthHz() const;
-      virtual void setMaxWidthHz(float newValue);
+      virtual double getMaxWidthHz() const;
+      virtual void setMaxWidthHz(double newValue);
 
       // Where all the action really happens
       int work(int noutput_items,

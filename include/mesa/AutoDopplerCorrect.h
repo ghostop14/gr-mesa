@@ -46,23 +46,23 @@ namespace gr {
        * class. mesa::AutoDopplerCorrect::make is the public interface for
        * creating new instances.
        */
-      static sptr make(float freq, float sampleRate, float maxDrift, float minWidth, float expectedWidth, int shiftHolddownMS,
+      static sptr make(double freq, double sampleRate, double maxDrift, double minWidth, double expectedWidth, int shiftHolddownMS,
     		  int fft_size, float squelchThreshold, int framesToAvg, float holdUpSec, bool processMessages, int detectionMethod);
 
       virtual float getSquelch() const = 0;
       virtual void setSquelch(float newValue) = 0;
 
-      virtual float getCenterFrequency() const = 0;
-      virtual void setCenterFrequency(float newValue) = 0;
+      virtual double getCenterFrequency() const = 0;
+      virtual void setCenterFrequency(double newValue) = 0;
 
-      virtual float getMinWidthHz() const = 0;
-      virtual void setMinWidthHz(float newValue) = 0;
+      virtual double getMinWidthHz() const = 0;
+      virtual void setMinWidthHz(double newValue) = 0;
 
-      virtual float getExpectedWidth() const = 0;
-      virtual void setExpectedWidth(float newValue) = 0;
+      virtual double getExpectedWidth() const = 0;
+      virtual void setExpectedWidth(double newValue) = 0;
 
-      virtual float getMaxDrift() const = 0;
-      virtual void setMaxDrift(float newValue) = 0;
+      virtual double getMaxDrift() const = 0;
+      virtual void setMaxDrift(double newValue) = 0;
     };
 
   } // namespace mesa

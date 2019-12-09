@@ -46,7 +46,7 @@ namespace gr {
        * class. mesa::MaxPower::make is the public interface for
        * creating new instances.
        */
-      static sptr make(float sampleRate, int fft_size, float squelchThreshold, float framesToAvg, bool produceOut, float stateThreshold, float holdUpSec);
+      static sptr make(double sampleRate, int fft_size, float squelchThreshold, float framesToAvg, bool produceOut, float stateThreshold, float holdUpSec);
 
       virtual float getSquelchThreshold() const = 0;
       virtual void setSquelchThreshold(float newValue) = 0;

@@ -38,7 +38,7 @@ namespace gr {
       // Nothing to declare in this block.
         boost::mutex d_mutex;
     	EnergyAnalyzer *pEnergyAnalyzer;
-    	float d_sampleRate;
+    	double d_sampleRate;
     	int d_framesToAvg;
     	float d_squelchThreshold;
 
@@ -64,7 +64,7 @@ namespace gr {
 		virtual float calcAverage();
 
      public:
-      MaxPower_impl(float sampleRate, int fft_size, float squelchThreshold, float framesToAvg, bool produceOut, float stateThreshold, float holdUpSec);
+      MaxPower_impl(double sampleRate, int fft_size, float squelchThreshold, float framesToAvg, bool produceOut, float stateThreshold, float holdUpSec);
       ~MaxPower_impl();
 
       void setup_rpc();

@@ -32,7 +32,7 @@ namespace gr {
   namespace mesa {
 
     SignalDetector::sptr
-    SignalDetector::make(int fftsize, float squelchThreshold, float minWidthHz, float maxWidthHz, float radioCenterFreq, float sampleRate, float holdUpSec,
+    SignalDetector::make(int fftsize, float squelchThreshold, double minWidthHz, double maxWidthHz, double radioCenterFreq, double sampleRate, float holdUpSec,
     						int framesToAvg, bool genSignalPDUs, bool enableDebug, int detectionMethod)
     {
       return gnuradio::get_initial_sptr
@@ -43,7 +43,7 @@ namespace gr {
     /*
      * The private constructor
      */
-    SignalDetector_impl::SignalDetector_impl(int fftsize, float squelchThreshold, float minWidthHz, float maxWidthHz, float radioCenterFreq, float sampleRate,
+    SignalDetector_impl::SignalDetector_impl(int fftsize, float squelchThreshold, double minWidthHz, double maxWidthHz, double radioCenterFreq, double sampleRate,
     												float holdUpSec, int framesToAvg, bool genSignalPDUs, bool enableDebug, int detectionMethod)
       : gr::sync_block("SignalDetector",
               gr::io_signature::make(1, 1, sizeof(gr_complex)),
@@ -86,9 +86,9 @@ namespace gr {
     }
 
     float SignalDetector_impl::calcMinDutyCycle() {
-    	float hzPerBucket = d_sampleRate / d_fftSize;
-    	float binsForMinHz = d_minWidthHz / hzPerBucket;
-    	float minDutyCycle = binsForMinHz / d_fftSize;
+    	double hzPerBucket = d_sampleRate / (double)d_fftSize;
+    	double binsForMinHz = d_minWidthHz / hzPerBucket;
+    	double minDutyCycle = binsForMinHz / d_fftSize;
 
     	return minDutyCycle;
     }
@@ -104,11 +104,11 @@ namespace gr {
     		std::cout << "[Mesa Detector] Changing squelch to " << newValue << std::endl;
     }
 
-    float SignalDetector_impl::getCenterFrequency() const {
+    double SignalDetector_impl::getCenterFrequency() const {
     	return d_centerFreq;
     }
 
-    void SignalDetector_impl::setCenterFrequency(float newValue) {
+    void SignalDetector_impl::setCenterFrequency(double newValue) {
     	gr::thread::scoped_lock guard(d_mutex);
 
     	if (d_startInitialized) {
@@ -128,11 +128,11 @@ namespace gr {
     		std::cout << "[Mesa Detector] Changing frequency to " << newValue << std::endl;
     }
 
-    float SignalDetector_impl::getMinWidthHz() const {
+    double SignalDetector_impl::getMinWidthHz() const {
     	return d_minWidthHz;
     }
 
-    void SignalDetector_impl::setMinWidthHz(float newValue) {
+    void SignalDetector_impl::setMinWidthHz(double newValue) {
     	// Calc Duty Cycle
     	d_minWidthHz = newValue;
     	float minDutyCycle = calcMinDutyCycle();
@@ -142,11 +142,11 @@ namespace gr {
     		std::cout << "[Mesa Detector] Changing min width (Hz) to " << newValue << std::endl;
     }
 
-    float SignalDetector_impl::getMaxWidthHz() const {
+    double SignalDetector_impl::getMaxWidthHz() const {
     	return d_maxWidthHz;
     }
 
-    void SignalDetector_impl::setMaxWidthHz(float newValue) {
+    void SignalDetector_impl::setMaxWidthHz(double newValue) {
     	d_maxWidthHz = newValue;
     	if (d_enableDebug)
     		std::cout << "[Mesa Detector] Changing max width (Hz) to " << newValue << std::endl;
@@ -305,8 +305,8 @@ namespace gr {
         // If just detected signal, send new PDU
         if (justDetectedSignal) {
 			// Find the max power signal:
-			float maxCtrFreq = 0.0;
-			float maxWidth = 0.0;
+        	double maxCtrFreq = 0.0;
+        	double maxWidth = 0.0;
 			float maxPower = -999.0;
 
 			for (int i=0;i<signalVector.size();i++) {
@@ -421,80 +421,6 @@ namespace gr {
 
         return processData(noutput_items,in,out,NULL);
     } // end work
-
-
-    void
-	SignalDetector_impl::setup_rpc()
-    {
-#ifdef GR_CTRLPORT
-    	// Getters
-      add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_get<SignalDetector, float>(
-	  alias(), "Squelch",
-	  &SignalDetector::getSquelch,
-      pmt::mp(0.0), pmt::mp(100.0e6), pmt::mp(0.0),
-      "dB", "Squelch", RPC_PRIVLVL_MIN,
-      DISPTIME | DISPOPTSTRIP)));
-
-      add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_get<SignalDetector, float>(
-	  alias(), "minWidthHz",
-	  &SignalDetector::getMinWidthHz,
-      pmt::mp(0.0), pmt::mp(100.0e6), pmt::mp(0.0),
-      "Hz", "minWidthHz", RPC_PRIVLVL_MIN,
-      DISPTIME | DISPOPTSTRIP)));
-
-      add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_get<SignalDetector, float>(
-	  alias(), "maxWidthHz",
-	  &SignalDetector::getMaxWidthHz,
-      pmt::mp(0.0), pmt::mp(100.0e6), pmt::mp(0.0),
-      "Hz", "maxWidthHz", RPC_PRIVLVL_MIN,
-      DISPTIME | DISPOPTSTRIP)));
-
-      add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_get<SignalDetector, float>(
-	  alias(), "CenterFreq",
-	  &SignalDetector::getCenterFrequency,
-      pmt::mp(0.0), pmt::mp(100.0e6), pmt::mp(0.0),
-      "Hz", "CenterFreq", RPC_PRIVLVL_MIN,
-      DISPTIME | DISPOPTSTRIP)));
-
-      // Setters
-      add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_set<SignalDetector, float>(
-	  alias(), "Squelch",
-	  &SignalDetector::setSquelch,
-      pmt::mp(0.0), pmt::mp(100.0e6), pmt::mp(0.0),
-      "dB", "Squelch", RPC_PRIVLVL_MIN,
-      DISPTIME | DISPOPTSTRIP)));
-
-      add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_set<SignalDetector, float>(
-	  alias(), "minWidthHz",
-	  &SignalDetector::setMinWidthHz,
-      pmt::mp(0.0), pmt::mp(100.0e6), pmt::mp(0.0),
-      "Hz", "minWidthHz", RPC_PRIVLVL_MIN,
-      DISPTIME | DISPOPTSTRIP)));
-
-      add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_set<SignalDetector, float>(
-	  alias(), "maxWidthHz",
-	  &SignalDetector::setMaxWidthHz,
-      pmt::mp(0.0), pmt::mp(100.0e6), pmt::mp(0.0),
-      "Hz", "maxWidthHz", RPC_PRIVLVL_MIN,
-      DISPTIME | DISPOPTSTRIP)));
-
-      add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_set<SignalDetector, float>(
-	  alias(), "CenterFreq",
-	  &SignalDetector::setCenterFrequency,
-      pmt::mp(0.0), pmt::mp(100.0e6), pmt::mp(0.0),
-      "Hz", "CenterFreq", RPC_PRIVLVL_MIN,
-      DISPTIME | DISPOPTSTRIP)));
-
-#endif /* GR_CTRLPORT */
-    }
 
   } /* namespace mesa */
 } /* namespace gr */
