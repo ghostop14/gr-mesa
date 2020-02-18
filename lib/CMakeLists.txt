@@ -33,7 +33,7 @@ list(APPEND mesa_sources
     SourceSelector_impl.cc
     LongTermIntegrator_impl.cc
     ioselector_impl.cc
-    PhaseShift_impl.cc
+    phase_shift_impl.cc
     AvgToMsg_impl.cc )
 
 set(mesa_sources "${mesa_sources}" PARENT_SCOPE)

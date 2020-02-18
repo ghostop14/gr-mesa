@@ -27,7 +27,7 @@ install(FILES
     mesa_AutoCorrelator.block.yml
     mesa_AutoCorrelatorSink.block.yml
     mesa_Normalize.block.yml
-    mesa_PhaseShift.block.yml
+    mesa_phase_shift.block.yml
     mesa_AvgToMsg.block.yml
     mesa_VariableRotator.block.yml DESTINATION share/gnuradio/grc/blocks
 )

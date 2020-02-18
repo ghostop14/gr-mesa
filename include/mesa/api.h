@@ -26,9 +26,9 @@
 #include <gnuradio/attributes.h>
 
 #ifdef gnuradio_mesa_EXPORTS
-#  define MESA_API __GR_ATTR_EXPORT
+#define MESA_API __GR_ATTR_EXPORT
 #else
-#  define MESA_API __GR_ATTR_IMPORT
+#define MESA_API __GR_ATTR_IMPORT
 #endif
 
 #endif /* INCLUDED_MESA_API_H */

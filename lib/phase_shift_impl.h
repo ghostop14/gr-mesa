@@ -18,33 +18,27 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_MESA_IOSELECTOR_IMPL_H
-#define INCLUDED_MESA_IOSELECTOR_IMPL_H
+#ifndef INCLUDED_MESA_PHASE_SHIFT_IMPL_H
+#define INCLUDED_MESA_phase_shift_IMPL_H
 
-#include <mesa/ioselector.h>
+#include <mesa/phase_shift.h>
 
 namespace gr {
 namespace mesa {
 
-class ioselector_impl : public ioselector {
+class phase_shift_impl : public phase_shift {
 private:
-  // Nothing to declare in this block.
-  int d_numinputs;
-  int d_numoutputs;
-  int d_curInput;
-  int d_curOutput;
-  int d_itemsize;
+  float d_shift_in_radians;
+  gr_complex d_shift_cc;
 
 public:
-  ioselector_impl(int numinputs, int numoutputs, int inputport, int outputport,
-                  int itemsize);
-  ~ioselector_impl();
+  phase_shift_impl(float shift_in_radians);
+  ~phase_shift_impl();
 
-  virtual void set_input_index(int newValue);
-  virtual void set_output_index(int newValue);
+  virtual float get_shift() const;
+  virtual void set_shift(float newValue);
 
-  void handleMsgInputIndex(pmt::pmt_t msg);
-  void handleMsgOutputIndex(pmt::pmt_t msg);
+  void handle_msg_in(pmt::pmt_t msg);
 
   // Where all the action really happens
   int work(int noutput_items, gr_vector_const_void_star &input_items,
@@ -54,4 +48,4 @@ public:
 } // namespace mesa
 } // namespace gr
 
-#endif /* INCLUDED_MESA_IOSELECTOR_IMPL_H */
+#endif /* INCLUDED_MESA_PHASE_SHIFT_IMPL_H */
