@@ -13,6 +13,7 @@ inputs:
     dtype: complex
 -   domain: message
     id: shift_rad
+    optional: true
 
 outputs:
 -   domain: stream
