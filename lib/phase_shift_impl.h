@@ -19,7 +19,7 @@
  */
 
 #ifndef INCLUDED_MESA_PHASE_SHIFT_IMPL_H
-#define INCLUDED_MESA_phase_shift_IMPL_H
+#define INCLUDED_MESA_PHASE_SHIFT_IMPL_H
 
 #include <mesa/phase_shift.h>
 
