@@ -37,7 +37,7 @@ class LongTermIntegrator_impl : public LongTermIntegrator {
 private:
   int d_fftsize;
   bool d_normalize;
-  float *aggBuffer;
+  double *aggBuffer;
   boost::mutex d_mutex;
 
   std::chrono::time_point<std::chrono::steady_clock> startTime;
