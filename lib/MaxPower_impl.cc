@@ -18,23 +18,27 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "MaxPower_impl.h"
 #include <gnuradio/io_signature.h>
 
 namespace gr {
 namespace mesa {
 
-MaxPower::sptr MaxPower::make(double sampleRate, int fft_size,
-                              float squelchThreshold, float framesToAvg,
-                              bool produceOut, float stateThreshold,
-                              float holdUpSec) {
-  return gnuradio::get_initial_sptr(
-      new MaxPower_impl(sampleRate, fft_size, squelchThreshold, framesToAvg,
-                        produceOut, stateThreshold, holdUpSec));
+MaxPower::sptr MaxPower::make(double sampleRate,
+                              int fft_size,
+                              float squelchThreshold,
+                              float framesToAvg,
+                              bool produceOut,
+                              float stateThreshold,
+                              float holdUpSec)
+{
+    return gnuradio::make_block_sptr<MaxPower_impl>(sampleRate,
+                                                    fft_size,
+                                                    squelchThreshold,
+                                                    framesToAvg,
+                                                    produceOut,
+                                                    stateThreshold,
+                                                    holdUpSec);
 }
 
 /*

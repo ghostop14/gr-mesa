@@ -34,7 +34,7 @@ namespace mesa {
  */
 class MESA_API MaxPower : virtual public gr::sync_block {
 public:
-  typedef boost::shared_ptr<MaxPower> sptr;
+  typedef std::shared_ptr<MaxPower> sptr;
 
   /*!
    * \brief Return a shared_ptr to a new instance of mesa::MaxPower.

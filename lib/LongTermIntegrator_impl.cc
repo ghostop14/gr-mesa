@@ -18,10 +18,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "LongTermIntegrator_impl.h"
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
@@ -29,9 +25,9 @@
 namespace gr {
 namespace mesa {
 
-LongTermIntegrator::sptr LongTermIntegrator::make(int fftsize, bool normalize) {
-	return gnuradio::get_initial_sptr(
-			new LongTermIntegrator_impl(fftsize, normalize));
+LongTermIntegrator::sptr LongTermIntegrator::make(int fftsize, bool normalize)
+{
+    return gnuradio::make_block_sptr<LongTermIntegrator_impl>(fftsize, normalize);
 }
 
 /*

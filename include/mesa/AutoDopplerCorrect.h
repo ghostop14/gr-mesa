@@ -34,7 +34,7 @@ namespace mesa {
  */
 class MESA_API AutoDopplerCorrect : virtual public gr::sync_block {
 public:
-  typedef boost::shared_ptr<AutoDopplerCorrect> sptr;
+  typedef std::shared_ptr<AutoDopplerCorrect> sptr;
 
   /*!
    * \brief Return a shared_ptr to a new instance of mesa::AutoDopplerCorrect.

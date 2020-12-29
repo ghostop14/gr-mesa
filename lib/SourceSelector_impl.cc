@@ -18,21 +18,17 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "SourceSelector_impl.h"
 #include <gnuradio/io_signature.h>
 
 namespace gr {
 namespace mesa {
 
-SourceSelector::sptr SourceSelector::make(float holdTime, int numInputs,
-                                          int defaultInput,
-                                          int inputBlockSize) {
-  return gnuradio::get_initial_sptr(new SourceSelector_impl(
-      holdTime, numInputs, defaultInput, inputBlockSize));
+SourceSelector::sptr
+SourceSelector::make(float holdTime, int numInputs, int defaultInput, int inputBlockSize)
+{
+    return gnuradio::make_block_sptr<SourceSelector_impl>(
+        holdTime, numInputs, defaultInput, inputBlockSize);
 }
 
 /*

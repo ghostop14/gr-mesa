@@ -34,7 +34,7 @@ namespace mesa {
  */
 class MESA_API SourceSelector : virtual public gr::sync_block {
 public:
-  typedef boost::shared_ptr<SourceSelector> sptr;
+  typedef std::shared_ptr<SourceSelector> sptr;
 
   /*!
    * \brief Return a shared_ptr to a new instance of mesa::SourceSelector.

@@ -18,10 +18,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "AutoDopplerCorrect_impl.h"
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
@@ -35,15 +31,31 @@
 namespace gr {
 namespace mesa {
 
-AutoDopplerCorrect::sptr AutoDopplerCorrect::make(
-    double freq, double sampleRate, double maxDrift, double minWidth,
-    double expectedWidth, int shiftHolddownMS, int fft_size,
-    float squelchThreshold, int framesToAvg, float holdUpSec,
-    bool processMessages, int detectionMethod) {
-  return gnuradio::get_initial_sptr(new AutoDopplerCorrect_impl(
-      freq, sampleRate, maxDrift, minWidth, expectedWidth, shiftHolddownMS,
-      fft_size, squelchThreshold, framesToAvg, holdUpSec, processMessages,
-      detectionMethod));
+AutoDopplerCorrect::sptr AutoDopplerCorrect::make(double freq,
+                                                  double sampleRate,
+                                                  double maxDrift,
+                                                  double minWidth,
+                                                  double expectedWidth,
+                                                  int shiftHolddownMS,
+                                                  int fft_size,
+                                                  float squelchThreshold,
+                                                  int framesToAvg,
+                                                  float holdUpSec,
+                                                  bool processMessages,
+                                                  int detectionMethod)
+{
+    return gnuradio::make_block_sptr<AutoDopplerCorrect_impl>(freq,
+                                                              sampleRate,
+                                                              maxDrift,
+                                                              minWidth,
+                                                              expectedWidth,
+                                                              shiftHolddownMS,
+                                                              fft_size,
+                                                              squelchThreshold,
+                                                              framesToAvg,
+                                                              holdUpSec,
+                                                              processMessages,
+                                                              detectionMethod);
 }
 
 /*

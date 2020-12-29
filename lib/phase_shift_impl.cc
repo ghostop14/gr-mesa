@@ -18,10 +18,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "phase_shift_impl.h"
 #include <gnuradio/io_signature.h>
 
@@ -30,8 +26,9 @@
 namespace gr {
 namespace mesa {
 
-phase_shift::sptr phase_shift::make(float shift_in_radians) {
-  return gnuradio::get_initial_sptr(new phase_shift_impl(shift_in_radians));
+phase_shift::sptr phase_shift::make(float shift_in_radians)
+{
+    return gnuradio::make_block_sptr<phase_shift_impl>(shift_in_radians);
 }
 
 /*

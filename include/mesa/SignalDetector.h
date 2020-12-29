@@ -34,7 +34,7 @@ namespace mesa {
  */
 class MESA_API SignalDetector : virtual public gr::sync_block {
 public:
-  typedef boost::shared_ptr<SignalDetector> sptr;
+  typedef std::shared_ptr<SignalDetector> sptr;
 
   /*!
    * \brief Return a shared_ptr to a new instance of mesa::SignalDetector.

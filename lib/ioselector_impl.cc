@@ -18,20 +18,17 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "ioselector_impl.h"
 #include <gnuradio/io_signature.h>
 
 namespace gr {
 namespace mesa {
 
-ioselector::sptr ioselector::make(int numinputs, int numoutputs, int inputport,
-                                  int outputport, int itemsize) {
-  return gnuradio::get_initial_sptr(new ioselector_impl(
-      numinputs, numoutputs, inputport, outputport, itemsize));
+ioselector::sptr ioselector::make(
+    int numinputs, int numoutputs, int inputport, int outputport, int itemsize)
+{
+    return gnuradio::make_block_sptr<ioselector_impl>(
+        numinputs, numoutputs, inputport, outputport, itemsize);
 }
 
 /*

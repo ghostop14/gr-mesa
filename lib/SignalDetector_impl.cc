@@ -18,10 +18,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <cstring> // memcpy
 
 #include "SignalDetector_impl.h"
@@ -30,14 +26,29 @@
 namespace gr {
 namespace mesa {
 
-SignalDetector::sptr SignalDetector::make(
-    int fftsize, float squelchThreshold, double minWidthHz, double maxWidthHz,
-    double radioCenterFreq, double sampleRate, float holdUpSec, int framesToAvg,
-    bool genSignalPDUs, bool enableDebug, int detectionMethod) {
-  return gnuradio::get_initial_sptr(new SignalDetector_impl(
-      fftsize, squelchThreshold, minWidthHz, maxWidthHz, radioCenterFreq,
-      sampleRate, holdUpSec, framesToAvg, genSignalPDUs, enableDebug,
-      detectionMethod));
+SignalDetector::sptr SignalDetector::make(int fftsize,
+                                          float squelchThreshold,
+                                          double minWidthHz,
+                                          double maxWidthHz,
+                                          double radioCenterFreq,
+                                          double sampleRate,
+                                          float holdUpSec,
+                                          int framesToAvg,
+                                          bool genSignalPDUs,
+                                          bool enableDebug,
+                                          int detectionMethod)
+{
+    return gnuradio::make_block_sptr<SignalDetector_impl>(fftsize,
+                                                          squelchThreshold,
+                                                          minWidthHz,
+                                                          maxWidthHz,
+                                                          radioCenterFreq,
+                                                          sampleRate,
+                                                          holdUpSec,
+                                                          framesToAvg,
+                                                          genSignalPDUs,
+                                                          enableDebug,
+                                                          detectionMethod);
 }
 
 /*

@@ -48,7 +48,6 @@ protected:
   int msgBufferSize;
 
   double d_sampleRate;
-  float d_gain;
   double d_centerFreq;
   double d_maxDrift;
   double d_expectedWidth;

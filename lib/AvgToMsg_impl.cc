@@ -18,10 +18,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "AvgToMsg_impl.h"
 #include <gnuradio/io_signature.h>
 
@@ -31,7 +27,7 @@ namespace gr {
 namespace mesa {
 
 AvgToMsg::sptr AvgToMsg::make(int veclen) {
-  return gnuradio::get_initial_sptr(new AvgToMsg_impl(veclen));
+    return gnuradio::make_block_sptr<AvgToMsg_impl>(veclen);
 }
 
 /*
