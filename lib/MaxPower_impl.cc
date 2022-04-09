@@ -20,7 +20,7 @@
 
 #include "MaxPower_impl.h"
 #include <gnuradio/io_signature.h>
-
+#include <functional>
 namespace gr {
 namespace mesa {
 
@@ -90,7 +90,7 @@ MaxPower_impl::MaxPower_impl(double sampleRate, int fft_size,
 
   message_port_register_in(pmt::mp("msgin"));
   set_msg_handler(pmt::mp("msgin"),
-                  boost::bind(&MaxPower_impl::handleMsgIn, this, _1));
+                  std::bind(&MaxPower_impl::handleMsgIn, this, std::placeholders::_1));
 
   message_port_register_out(pmt::mp("out"));
   message_port_register_out(pmt::mp("maxpower"));

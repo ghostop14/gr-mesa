@@ -20,7 +20,7 @@
 
 #include "SourceSelector_impl.h"
 #include <gnuradio/io_signature.h>
-
+#include <functional>
 namespace gr {
 namespace mesa {
 
@@ -63,16 +63,16 @@ SourceSelector_impl::SourceSelector_impl(float holdTime, int numInputs,
 
   message_port_register_in(pmt::mp("in1"));
   set_msg_handler(pmt::mp("in1"),
-                  boost::bind(&SourceSelector_impl::handleMsgIn1, this, _1));
+                  std::bind(&SourceSelector_impl::handleMsgIn1, this, std::placeholders::_1));
   message_port_register_in(pmt::mp("in2"));
   set_msg_handler(pmt::mp("in2"),
-                  boost::bind(&SourceSelector_impl::handleMsgIn2, this, _1));
+                  std::bind(&SourceSelector_impl::handleMsgIn2, this, std::placeholders::_1));
   message_port_register_in(pmt::mp("in3"));
   set_msg_handler(pmt::mp("in3"),
-                  boost::bind(&SourceSelector_impl::handleMsgIn3, this, _1));
+                  std::bind(&SourceSelector_impl::handleMsgIn3, this, std::placeholders::_1));
   message_port_register_in(pmt::mp("in4"));
   set_msg_handler(pmt::mp("in4"),
-                  boost::bind(&SourceSelector_impl::handleMsgIn4, this, _1));
+                  std::bind(&SourceSelector_impl::handleMsgIn4, this, std::placeholders::_1));
 
   message_port_register_out(pmt::mp("inputport"));
 
