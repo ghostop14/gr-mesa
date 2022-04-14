@@ -22,7 +22,7 @@
 
 #include "SignalDetector_impl.h"
 #include <gnuradio/io_signature.h>
-
+#include <functional>
 namespace gr {
 namespace mesa {
 
@@ -93,7 +93,7 @@ SignalDetector_impl::SignalDetector_impl(int fftsize, float squelchThreshold,
   // Set up PDUs
   message_port_register_in(pmt::mp("msgin"));
   set_msg_handler(pmt::mp("msgin"),
-                  boost::bind(&SignalDetector_impl::handleMsgIn, this, _1));
+                  std::bind(&SignalDetector_impl::handleMsgIn, this, std::placeholders::_1));
 
   message_port_register_out(pmt::mp("signaldetect"));
   message_port_register_out(pmt::mp("signals"));

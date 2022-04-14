@@ -21,7 +21,7 @@
 #include "AutoDopplerCorrect_impl.h"
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
-
+#include <functional>
 #ifndef NDEBUG
 #define PRINTDEBUG
 //#else
@@ -126,7 +126,7 @@ AutoDopplerCorrect_impl::AutoDopplerCorrect_impl(
   // -------------------
   message_port_register_in(pmt::mp("msgin"));
   set_msg_handler(pmt::mp("msgin"),
-                  boost::bind(&AutoDopplerCorrect_impl::handleMsgIn, this, _1));
+                  std::bind(&AutoDopplerCorrect_impl::handleMsgIn, this, std::placeholders::_1));
 
   message_port_register_out(pmt::mp("signaldetect"));
   message_port_register_out(pmt::mp("msgout"));
