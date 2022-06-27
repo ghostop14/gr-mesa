@@ -45,7 +45,7 @@ class AutoCorrelator(gr.hier_block2):
         fac = fft.fft_vcc(self.fac_size, True, ())
 
         complex2Mag = blocks.complex_to_mag(self.fac_size)
-        self.avg = filter.single_pole_iir_filter_ff_make(1.0, self.fac_size)
+        self.avg = filter.single_pole_iir_filter_ff(1.0, self.fac_size)
 
         fac_fac   = fft.fft_vfc(self.fac_size, True, ())
         fac_c2mag = blocks.complex_to_mag_make(fac_size)
