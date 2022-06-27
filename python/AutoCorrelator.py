@@ -48,12 +48,12 @@ class AutoCorrelator(gr.hier_block2):
         self.avg = filter.single_pole_iir_filter_ff(1.0, self.fac_size)
 
         fac_fac   = fft.fft_vfc(self.fac_size, True, ())
-        fac_c2mag = blocks.complex_to_mag_make(fac_size)
+        fac_c2mag = blocks.complex_to_mag(fac_size)
 
         # There's a note in Baz's block about needing to add 3 dB to each bin but the DC bin, however it was never implemented
         n = 20
         k =  -20*math.log10(self.fac_size)
-        log = blocks.nlog10_ff_make(n, self.fac_size, k )
+        log = blocks.nlog10_ff(n, self.fac_size, k )
 
         if useDB:
             self.connect(self, streamToVec, self.one_in_n, fac, complex2Mag,  fac_fac, fac_c2mag, self.avg, log,  self)
